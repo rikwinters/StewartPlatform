@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Network Name="HW_Network" Revision="0.0">
+	<!-- List of Components in this network -->
+	<Components>
+		<Object
+			Name       = "AM4411"
+			GUID       = "{6A72619A-3DEB-4DC6-A6F9-E4584D1388C6}"
+			Class      = "AM441"
+			Position   = "(2880,90)"
+			Visualized = "true"
+			Remotely   = "true">
+			<Channels>
+				<Server Name="AI1"/>
+				<Server Name="AI2"/>
+				<Server Name="AI3"/>
+				<Server Name="AI4"/>
+				<Server Name="AO1"/>
+				<Server Name="AO2"/>
+				<Server Name="AO3"/>
+				<Server Name="AO4"/>
+				<Server Name="ClassState"/>
+				<Server Name="DeviceID"/>
+				<Server Name="ErrorBits"/>
+				<Server Name="FirmwareVersion"/>
+				<Server Name="FPGAVersion"/>
+				<Server Name="HwVersion"/>
+				<Server Name="LEDControl" Value="0"/>
+				<Server Name="RefVoltageOK"/>
+				<Server Name="RetryCounter"/>
+				<Server Name="SerialNo"/>
+				<Client Name="AI1_Freq"/>
+				<Client Name="AI1_Max" Value="10000"/>
+				<Client Name="AI1_Min" Value="-10000"/>
+				<Client Name="AI1Config" Value="0"/>
+				<Client Name="AI2_Freq"/>
+				<Client Name="AI2_Max" Value="10000"/>
+				<Client Name="AI2_Min" Value="-10000"/>
+				<Client Name="AI2Config"/>
+				<Client Name="AI3_Freq"/>
+				<Client Name="AI3_Max" Value="10000"/>
+				<Client Name="AI3_Min" Value="-10000"/>
+				<Client Name="AI3Config"/>
+				<Client Name="AI4_Freq"/>
+				<Client Name="AI4_Max" Value="10000"/>
+				<Client Name="AI4_Min" Value="-10000"/>
+				<Client Name="AI4Config"/>
+				<Client Name="AO1_Max" Value="10000"/>
+				<Client Name="AO1_Min" Value="-10000"/>
+				<Client Name="AO2_Max" Value="10000"/>
+				<Client Name="AO2_Min" Value="-10000"/>
+				<Client Name="AO3_Max" Value="10000"/>
+				<Client Name="AO3_Min" Value="-10000"/>
+				<Client Name="AO4_Max" Value="10000"/>
+				<Client Name="AO4_Min" Value="-10000"/>
+				<Client Name="Place" Value="1"/>
+				<Client Name="Required" Value="1"/>
+				<Client Name="SdiasIn"/>
+			</Channels>
+			<!-- List of Networks in this component -->
+			<Networks>
+				<Network>
+					<!-- List of Components in this network -->
+					<Components>
+						<Object Name="_base" GUID="{7CBC63CA-0422-45ED-A120-9E10D4AFBCB7}" Class="SdiasBase">
+							<Channels>
+								<Server Name="ClassState"/>
+								<Server Name="DeviceID"/>
+								<Server Name="FPGAVersion"/>
+								<Server Name="HwVersion"/>
+								<Server Name="LEDControl" Value="0"/>
+								<Server Name="RetryCounter"/>
+								<Server Name="SDOState"/>
+								<Server Name="SerialNo"/>
+								<Client Name="Place" Value="1"/>
+								<Client Name="Required" Value="1"/>
+								<Client Name="SdiasIn"/>
+								<Client Name="ToStdLib"/>
+							</Channels>
+							<!-- List of Networks in this component -->
+							<Networks>
+								<Network>
+									<!-- List of Components in this network -->
+									<Components>
+										<Object Name="SerialNoStr" GUID="{016F794C-857F-482F-8C65-B5EE24158A3F}" Class="String">
+											<Channels>
+												<Server Name="Data"/>
+												<Client Name="SingleRealloc" Value="1"/>
+											</Channels>
+											<!-- List of Networks in this component -->
+											<Networks>
+												<Network>
+													<!-- List of Components in this network -->
+													<Components>
+														<Object Name="_base" GUID="{B9D2D328-1416-469A-BE13-9F6CBBB1958D}" Class="StringInternal">
+															<Channels>
+																<Server Name="Data"/>
+																<Client Name="DataBuffer"/>
+																<Client Name="SingleRealloc" Value="1"/>
+															</Channels>
+															<!-- List of Networks in this component -->
+															<Networks>
+																<Network>
+																	<!-- List of Components in this network -->
+																	<Components>
+																		<Object Name="_base" GUID="{6CBDDE57-D222-420A-BC45-D2266096244E}" Class="VirtualBaseInit">
+																			<Channels>
+																				<Server Name="Data"/>
+																			</Channels>
+																		</Object>
+																	</Components>
+																	<Connections>
+																	</Connections>
+																</Network>
+															</Networks>
+														</Object>
+														<Object Name="MerkerEx0" GUID="{53955FF7-8ABE-4B49-B914-227100C3FDEF}" Class="MerkerEx">
+															<Channels>
+																<Server Name="m_udLength"/>
+																<Client Name="ThreadSafe" Value="0"/>
+															</Channels>
+														</Object>
+													</Components>
+													<Connections>
+													</Connections>
+												</Network>
+											</Networks>
+										</Object>
+									</Components>
+									<Connections>
+									</Connections>
+								</Network>
+							</Networks>
+						</Object>
+					</Components>
+					<Connections>
+					</Connections>
+				</Network>
+			</Networks>
+			<AdditionalData>
+				<Entry Name="DeviceType" Value="AM441"/>
+			</AdditionalData>
+		</Object>
+		<Object
+			Name       = "AM4412"
+			GUID       = "{262FFE2B-C249-497E-A2AD-A969487EBEDC}"
+			Class      = "AM441"
+			Position   = "(3570,90)"
+			Visualized = "true"
+			Remotely   = "true">
+			<Channels>
+				<Server Name="AI1"/>
+				<Server Name="AI2"/>
+				<Server Name="AI3"/>
+				<Server Name="AI4"/>
+				<Server Name="AO1"/>
+				<Server Name="AO2"/>
+				<Server Name="AO3"/>
+				<Server Name="AO4"/>
+				<Server Name="ClassState"/>
+				<Server Name="DeviceID"/>
+				<Server Name="ErrorBits"/>
+				<Server Name="FirmwareVersion"/>
+				<Server Name="FPGAVersion"/>
+				<Server Name="HwVersion"/>
+				<Server Name="LEDControl" Value="0"/>
+				<Server Name="RefVoltageOK"/>
+				<Server Name="RetryCounter"/>
+				<Server Name="SerialNo"/>
+				<Client Name="AI1_Freq"/>
+				<Client Name="AI1_Max" Value="10000"/>
+				<Client Name="AI1_Min" Value="-10000"/>
+				<Client Name="AI1Config"/>
+				<Client Name="AI2_Freq"/>
+				<Client Name="AI2_Max" Value="10000"/>
+				<Client Name="AI2_Min" Value="-10000"/>
+				<Client Name="AI2Config"/>
+				<Client Name="AI3_Freq"/>
+				<Client Name="AI3_Max" Value="10000"/>
+				<Client Name="AI3_Min" Value="-10000"/>
+				<Client Name="AI3Config"/>
+				<Client Name="AI4_Freq"/>
+				<Client Name="AI4_Max" Value="10000"/>
+				<Client Name="AI4_Min" Value="-10000"/>
+				<Client Name="AI4Config"/>
+				<Client Name="AO1_Max" Value="10000"/>
+				<Client Name="AO1_Min" Value="-10000"/>
+				<Client Name="AO2_Max" Value="10000"/>
+				<Client Name="AO2_Min" Value="-10000"/>
+				<Client Name="AO3_Max" Value="10000"/>
+				<Client Name="AO3_Min" Value="-10000"/>
+				<Client Name="AO4_Max" Value="10000"/>
+				<Client Name="AO4_Min" Value="-10000"/>
+				<Client Name="Place" Value="2"/>
+				<Client Name="Required" Value="1"/>
+				<Client Name="SdiasIn"/>
+			</Channels>
+			<!-- List of Networks in this component -->
+			<Networks>
+				<Network>
+					<!-- List of Components in this network -->
+					<Components>
+						<Object Name="_base" GUID="{7CBC63CA-0422-45ED-A120-9E10D4AFBCB7}" Class="SdiasBase">
+							<Channels>
+								<Server Name="ClassState"/>
+								<Server Name="DeviceID"/>
+								<Server Name="FPGAVersion"/>
+								<Server Name="HwVersion"/>
+								<Server Name="LEDControl" Value="0"/>
+								<Server Name="RetryCounter"/>
+								<Server Name="SDOState"/>
+								<Server Name="SerialNo"/>
+								<Client Name="Place" Value="2"/>
+								<Client Name="Required" Value="1"/>
+								<Client Name="SdiasIn"/>
+								<Client Name="ToStdLib"/>
+							</Channels>
+							<!-- List of Networks in this component -->
+							<Networks>
+								<Network>
+									<!-- List of Components in this network -->
+									<Components>
+										<Object Name="SerialNoStr" GUID="{016F794C-857F-482F-8C65-B5EE24158A3F}" Class="String">
+											<Channels>
+												<Server Name="Data"/>
+												<Client Name="SingleRealloc" Value="1"/>
+											</Channels>
+											<!-- List of Networks in this component -->
+											<Networks>
+												<Network>
+													<!-- List of Components in this network -->
+													<Components>
+														<Object Name="_base" GUID="{B9D2D328-1416-469A-BE13-9F6CBBB1958D}" Class="StringInternal">
+															<Channels>
+																<Server Name="Data"/>
+																<Client Name="DataBuffer"/>
+																<Client Name="SingleRealloc" Value="1"/>
+															</Channels>
+															<!-- List of Networks in this component -->
+															<Networks>
+																<Network>
+																	<!-- List of Components in this network -->
+																	<Components>
+																		<Object Name="_base" GUID="{6CBDDE57-D222-420A-BC45-D2266096244E}" Class="VirtualBaseInit">
+																			<Channels>
+																				<Server Name="Data"/>
+																			</Channels>
+																		</Object>
+																	</Components>
+																	<Connections>
+																	</Connections>
+																</Network>
+															</Networks>
+														</Object>
+														<Object Name="MerkerEx0" GUID="{53955FF7-8ABE-4B49-B914-227100C3FDEF}" Class="MerkerEx">
+															<Channels>
+																<Server Name="m_udLength"/>
+																<Client Name="ThreadSafe" Value="0"/>
+															</Channels>
+														</Object>
+													</Components>
+													<Connections>
+													</Connections>
+												</Network>
+											</Networks>
+										</Object>
+									</Components>
+									<Connections>
+									</Connections>
+								</Network>
+							</Networks>
+						</Object>
+					</Components>
+					<Connections>
+					</Connections>
+				</Network>
+			</Networks>
+			<AdditionalData>
+				<Entry Name="DeviceType" Value="AM441"/>
+			</AdditionalData>
+		</Object>
+		<Object
+			Name       = "DM1611"
+			GUID       = "{5A6DE1DC-905F-444A-9E79-1FF97A12E592}"
+			Class      = "DM161"
+			Position   = "(2190,90)"
+			Visualized = "true"
+			Remotely   = "true">
+			<Channels>
+				<Server Name="ClassState"/>
+				<Server Name="DeviceID"/>
+				<Server Name="FPGAVersion"/>
+				<Server Name="HwVersion"/>
+				<Server Name="Input1"/>
+				<Server Name="Input2"/>
+				<Server Name="Input3"/>
+				<Server Name="Input4"/>
+				<Server Name="Input5"/>
+				<Server Name="Input6"/>
+				<Server Name="Input7"/>
+				<Server Name="Input8"/>
+				<Server Name="InputByte"/>
+				<Server Name="LEDControl" Value="0"/>
+				<Server Name="Output1"/>
+				<Server Name="Output2"/>
+				<Server Name="Output3"/>
+				<Server Name="Output4"/>
+				<Server Name="Output5"/>
+				<Server Name="Output6"/>
+				<Server Name="Output7"/>
+				<Server Name="Output8"/>
+				<Server Name="OutputByte"/>
+				<Server Name="RetryCounter"/>
+				<Server Name="SerialNo"/>
+				<Server Name="VoltageOk"/>
+				<Client Name="Place" Value="0"/>
+				<Client Name="Required" Value="1"/>
+				<Client Name="SdiasIn"/>
+			</Channels>
+			<!-- List of Networks in this component -->
+			<Networks>
+				<Network>
+					<!-- List of Components in this network -->
+					<Components>
+						<Object Name="_base" GUID="{61060596-9132-45AF-B1E9-E38F56488C38}" Class="SdiasBase">
+							<Channels>
+								<Server Name="ClassState"/>
+								<Server Name="DeviceID"/>
+								<Server Name="FPGAVersion"/>
+								<Server Name="HwVersion"/>
+								<Server Name="LEDControl" Value="0"/>
+								<Server Name="RetryCounter"/>
+								<Server Name="SDOState"/>
+								<Server Name="SerialNo"/>
+								<Client Name="Place" Value="0"/>
+								<Client Name="Required" Value="1"/>
+								<Client Name="SdiasIn"/>
+								<Client Name="ToStdLib"/>
+							</Channels>
+							<!-- List of Networks in this component -->
+							<Networks>
+								<Network>
+									<!-- List of Components in this network -->
+									<Components>
+										<Object Name="SerialNoStr" GUID="{016F794C-857F-482F-8C65-B5EE24158A3F}" Class="String">
+											<Channels>
+												<Server Name="Data"/>
+												<Client Name="SingleRealloc" Value="1"/>
+											</Channels>
+											<!-- List of Networks in this component -->
+											<Networks>
+												<Network>
+													<!-- List of Components in this network -->
+													<Components>
+														<Object Name="_base" GUID="{B9D2D328-1416-469A-BE13-9F6CBBB1958D}" Class="StringInternal">
+															<Channels>
+																<Server Name="Data"/>
+																<Client Name="DataBuffer"/>
+																<Client Name="SingleRealloc" Value="1"/>
+															</Channels>
+															<!-- List of Networks in this component -->
+															<Networks>
+																<Network>
+																	<!-- List of Components in this network -->
+																	<Components>
+																		<Object Name="_base" GUID="{6CBDDE57-D222-420A-BC45-D2266096244E}" Class="VirtualBaseInit">
+																			<Channels>
+																				<Server Name="Data"/>
+																			</Channels>
+																		</Object>
+																	</Components>
+																	<Connections>
+																	</Connections>
+																</Network>
+															</Networks>
+														</Object>
+														<Object Name="MerkerEx0" GUID="{53955FF7-8ABE-4B49-B914-227100C3FDEF}" Class="MerkerEx">
+															<Channels>
+																<Server Name="m_udLength"/>
+																<Client Name="ThreadSafe" Value="0"/>
+															</Channels>
+														</Object>
+													</Components>
+													<Connections>
+													</Connections>
+												</Network>
+											</Networks>
+										</Object>
+									</Components>
+									<Connections>
+									</Connections>
+								</Network>
+							</Networks>
+						</Object>
+					</Components>
+					<Connections>
+					</Connections>
+				</Network>
+			</Networks>
+			<AdditionalData>
+				<Entry Name="DeviceType" Value="DM161"/>
+			</AdditionalData>
+		</Object>
+		<Object
+			Name        = "HwControl1"
+			GUID        = "{808517B9-1E63-4825-8A5F-FCF9DB7E291E}"
+			Class       = "HwControl"
+			Position    = "(660,90)"
+			Visualized  = "true"
+			Remotely    = "true"
+			RealTime    = "1 ms"
+			CyclicTime  = "1 ms"
+			RealIndex   = "0"
+			CyclicIndex = "2147483392">
+			<Channels>
+				<Server Name="Control"/>
+				<Server Name="DiasMaster"/>
+				<Server Name="SafetyState"/>
+				<Server Name="State"/>
+				<Client Name="RtDebug"/>
+				<Client Name="SafetyDomainTimeout"/>
+			</Channels>
+			<!-- List of Networks in this component -->
+			<Networks>
+				<Network>
+					<!-- List of Components in this network -->
+					<Components>
+						<Object Name="_base" GUID="{4EF772E0-592A-4829-B661-2E7E0E1B8913}" Class="HwControlBase">
+							<Channels>
+								<Server Name="Control"/>
+								<Server Name="DiasMaster"/>
+								<Server Name="State"/>
+								<Client Name="RtDebug"/>
+								<Client Name="To_StdLib"/>
+								<Client Name="To_TaskObjectControl"/>
+							</Channels>
+						</Object>
+						<Object
+							Name      = "HWRtPostScan"
+							GUID      = "{367B4BFF-6F56-4D89-B858-79BEE0B86711}"
+							Class     = "HWRtPostScan"
+							RealTime  = "1 ms"
+							RealIndex = "1073741824">
+							<Channels>
+								<Server Name="ClassSvr"/>
+								<Client Name="toHwControlBase"/>
+							</Channels>
+						</Object>
+						<Object
+							Name       = "SafetyManager"
+							GUID       = "{4545C840-4FB2-4C80-B150-345DF08208A7}"
+							Class      = "SafetyManager"
+							CyclicTime = "10 ms">
+							<Channels>
+								<Server Name="ClassState"/>
+								<Server Name="LoginCnt"/>
+								<Server Name="MaxSyncDuration"/>
+								<Server Name="MinSyncDuration"/>
+								<Server Name="SyncDuration"/>
+								<Client Name="SafetyDomainTimeout"/>
+								<Client Name="To_HwControl"/>
+								<Client Name="To_OSKernel"/>
+								<Client Name="To_StdLib"/>
+							</Channels>
+						</Object>
+					</Components>
+					<Connections>
+					</Connections>
+				</Network>
+			</Networks>
+		</Object>
+		<Object
+			Name       = "SdiasPLC1"
+			GUID       = "{778206B6-5B78-4D16-BF74-9674E42A9085}"
+			Class      = "SdiasPLC"
+			Position   = "(1500,90)"
+			Visualized = "true"
+			Remotely   = "true">
+			<Channels>
+				<Server Name="ClassState"/>
+				<Server Name="FirmwareVersion"/>
+				<Server Name="InterfaceState"/>
+				<Server Name="IsoRdTaskDuration"/>
+				<Server Name="IsoRdTaskMaxDuration"/>
+				<Server Name="IsoWrTaskDuration"/>
+				<Server Name="IsoWrTaskMaxDuration"/>
+				<Server Name="ManagerOptionBits"/>
+				<Server Name="RetryCounter"/>
+				<Server Name="SdiasOut_1"/>
+				<Client Name="CycleTime" Value="1000"/>
+				<Client Name="IsoStartPoint" Value="50"/>
+				<Client Name="ToHwControl"/>
+			</Channels>
+			<!-- List of Networks in this component -->
+			<Networks>
+				<Network>
+					<!-- List of Components in this network -->
+					<Components>
+						<Object Name="_base" GUID="{0876B3F6-7B0D-4DDD-A261-E4AFE2F441AA}" Class="BusInterfaceSDIASInternal">
+							<Channels>
+								<Server Name="CallCommand"/>
+								<Server Name="InterfaceState"/>
+								<Client Name="CycleTime" Value="1000"/>
+								<Client Name="IsoStartPoint" Value="50"/>
+								<Client Name="ToHwControl"/>
+								<Client Name="ToOSKernel"/>
+								<Client Name="ToStdLib"/>
+							</Channels>
+							<!-- List of Networks in this component -->
+							<Networks>
+								<Network>
+									<!-- List of Components in this network -->
+									<Components>
+									</Components>
+									<Connections>
+									</Connections>
+								</Network>
+							</Networks>
+						</Object>
+						<Object Name="SdiasHubBase1" GUID="{0E4AC654-3AAF-47F8-801F-8E6412D5D92B}" Class="SdiasHubBase">
+							<Channels>
+								<Server Name="ClassSvr"/>
+								<Client Name="SplitterPlace" Value="0"/>
+								<Client Name="ToNextSDIAS"/>
+							</Channels>
+						</Object>
+						<Object Name="SdiasManager1" GUID="{A6CE8FF7-1B3C-49A6-976D-ED8995566590}" Class="SdiasManager">
+							<Channels>
+								<Server Name="ClassState"/>
+								<Server Name="FirmwareVersion"/>
+								<Server Name="IsoRdTaskDuration"/>
+								<Server Name="IsoRdTaskMaxDuration"/>
+								<Server Name="IsoTaskErrorCount"/>
+								<Server Name="IsoWrTaskDuration"/>
+								<Server Name="IsoWrTaskMaxDuration"/>
+								<Server Name="ManagerOptionBits"/>
+								<Server Name="RetryCounter"/>
+								<Client Name="DeviceID" Value="0"/>
+								<Client Name="ToBusInterface"/>
+								<Client Name="ToMultiTask"/>
+								<Client Name="ToStdLib"/>
+							</Channels>
+						</Object>
+					</Components>
+					<Connections>
+					</Connections>
+				</Network>
+			</Networks>
+		</Object>
+	</Components>
+	<Comments>
+	</Comments>
+	<!-- List of Connections in this network -->
+	<Connections>
+		<Connection Source="SdiasPLC1.ToHwControl" Destination="HwControl1.Control" Vertices="(1500,180),(1322,180),"/>
+		<Connection Source="DM1611.SdiasIn" Destination="SdiasPLC1.SdiasOut_1" Vertices="(2190,180),(2018,720),"/>
+		<Connection Source="AM4411.SdiasIn" Destination="SdiasPLC1.SdiasOut_1" Vertices="(2880,180),(2018,720),"/>
+		<Connection Source="AM4412.SdiasIn" Destination="SdiasPLC1.SdiasOut_1" Vertices="(3570,180),(2018,720),"/>
+	</Connections>
+	<!-- Headerfiles -->
+	<Options>
+	</Options>
+</Network>

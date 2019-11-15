@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<Network Name="IONetwork" Revision="0.0">
+	<!-- List of Components in this network -->
+	<Components>
+		<Object
+			Name       = "IONet1"
+			GUID       = "{17754065-4C73-4511-9798-63AE51C0C140}"
+			Class      = "IONet"
+			Position   = "(1050,270)"
+			Visualized = "false"
+			CyclicTime = "10 ms">
+			<Channels>
+				<Server Name="ClassSvr"/>
+				<Client Name="EnableCircuit"/>
+				<Client Name="I1"/>
+				<Client Name="I2"/>
+				<Client Name="I3"/>
+				<Client Name="I4"/>
+				<Client Name="I5"/>
+				<Client Name="I6"/>
+				<Client Name="O1"/>
+				<Client Name="O2"/>
+				<Client Name="O3"/>
+				<Client Name="O4"/>
+				<Client Name="O5"/>
+				<Client Name="O6"/>
+				<Client Name="Pressurize"/>
+				<Client Name="ResetButton"/>
+				<Client Name="ResetEStop"/>
+				<Client Name="StartButton"/>
+				<Client Name="StartPumps"/>
+				<Client Name="StopButton"/>
+				<Client Name="SystemOKLamp"/>
+			</Channels>
+		</Object>
+	</Components>
+	<Comments>
+	</Comments>
+	<!-- List of Connections in this network -->
+	<Connections>
+		<Connection Source="IONet1.StartButton" Destination="__IO_Element1" Vertices="(1050,360),(540,360)," IOObject="Start_button"/>
+		<Connection Source="IONet1.SystemOKLamp" Destination="__IO_Element2" Vertices="(1050,600),(540,600)," IOObject="System_OK_lamp"/>
+		<Connection Source="IONet1.StopButton" Destination="__IO_Element3" Vertices="(1050,420),(540,420)," IOObject="Stop_button"/>
+		<Connection Source="IONet1.ResetButton" Destination="__IO_Element4" Vertices="(1050,480),(540,480)," IOObject="Reset_button"/>
+		<Connection Source="IONet1.EnableCircuit" Destination="__IO_Element5" Vertices="(1050,540),(540,540)," IOObject="Enable_circuit"/>
+		<Connection Source="IONet1.StartPumps" Destination="__IO_Element6" Vertices="(1050,660),(540,660)," IOObject="Start_pumps"/>
+		<Connection Source="IONet1.Pressurize" Destination="__IO_Element01" Vertices="(1050,720),(540,720)," IOObject="Pressurize"/>
+		<Connection Source="IONet1.O1" Destination="__IO_Element7" Vertices="(1050,840),(540,840)," IOObject="O1"/>
+		<Connection Source="IONet1.O2" Destination="__IO_Element11" Vertices="(1050,900),(540,900)," IOObject="O2"/>
+		<Connection Source="IONet1.O3" Destination="__IO_Element21" Vertices="(1050,960),(540,960)," IOObject="O3"/>
+		<Connection Source="IONet1.O4" Destination="__IO_Element31" Vertices="(1050,1020),(540,1020)," IOObject="O4"/>
+		<Connection Source="IONet1.O5" Destination="__IO_Element41" Vertices="(1050,1080),(540,1080)," IOObject="O5"/>
+		<Connection Source="IONet1.O6" Destination="__IO_Element51" Vertices="(1050,1140),(540,1140)," IOObject="O6"/>
+		<Connection Source="IONet1.I1" Destination="__IO_Element8" Vertices="(1050,1200),(540,1200)," IOObject="I1"/>
+		<Connection Source="IONet1.I2" Destination="__IO_Element02" Vertices="(1050,1260),(540,1260)," IOObject="I2"/>
+		<Connection Source="IONet1.I3" Destination="__IO_Element12" Vertices="(1050,1320),(540,1320)," IOObject="I3"/>
+		<Connection Source="IONet1.I4" Destination="__IO_Element22" Vertices="(1050,1380),(540,1380)," IOObject="I4"/>
+		<Connection Source="IONet1.I5" Destination="__IO_Element32" Vertices="(1050,1440),(540,1440)," IOObject="I5"/>
+		<Connection Source="IONet1.I6" Destination="__IO_Element42" Vertices="(1050,1500),(540,1500)," IOObject="I6"/>
+		<Connection Source="IONet1.ResetEStop" Destination="__IO_Element9" Vertices="(1050,780),(540,780)," IOObject="Reset_EStop"/>
+	</Connections>
+	<!-- List of temp data objects in this network -->
+	<IOObjects>
+		<IOObject KeyName="__IO_Element01" Name="Pressurize" Position="(240,690)" Client="IONet1.Pressurize"/>
+		<IOObject KeyName="__IO_Element02" Name="I2" Position="(240,1230)" Client="IONet1.I2"/>
+		<IOObject KeyName="__IO_Element1" Name="Start_button" Position="(240,330)" Client="IONet1.StartButton"/>
+		<IOObject KeyName="__IO_Element11" Name="O2" Position="(240,870)" Client="IONet1.O2"/>
+		<IOObject KeyName="__IO_Element12" Name="I3" Position="(240,1290)" Client="IONet1.I3"/>
+		<IOObject KeyName="__IO_Element2" Name="System_OK_lamp" Position="(240,570)" Client="IONet1.SystemOKLamp"/>
+		<IOObject KeyName="__IO_Element21" Name="O3" Position="(240,930)" Client="IONet1.O3"/>
+		<IOObject KeyName="__IO_Element22" Name="I4" Position="(240,1350)" Client="IONet1.I4"/>
+		<IOObject KeyName="__IO_Element3" Name="Stop_button" Position="(240,390)" Client="IONet1.StopButton"/>
+		<IOObject KeyName="__IO_Element31" Name="O4" Position="(240,990)" Client="IONet1.O4"/>
+		<IOObject KeyName="__IO_Element32" Name="I5" Position="(240,1410)" Client="IONet1.I5"/>
+		<IOObject KeyName="__IO_Element4" Name="Reset_button" Position="(240,450)" Client="IONet1.ResetButton"/>
+		<IOObject KeyName="__IO_Element41" Name="O5" Position="(240,1050)" Client="IONet1.O5"/>
+		<IOObject KeyName="__IO_Element42" Name="I6" Position="(240,1470)" Client="IONet1.I6"/>
+		<IOObject KeyName="__IO_Element5" Name="Enable_circuit" Position="(240,510)" Client="IONet1.EnableCircuit"/>
+		<IOObject KeyName="__IO_Element51" Name="O6" Position="(240,1110)" Client="IONet1.O6"/>
+		<IOObject KeyName="__IO_Element6" Name="Start_pumps" Position="(240,630)" Client="IONet1.StartPumps"/>
+		<IOObject KeyName="__IO_Element7" Name="O1" Position="(240,810)" Client="IONet1.O1"/>
+		<IOObject KeyName="__IO_Element8" Name="I1" Position="(240,1170)" Client="IONet1.I1"/>
+		<IOObject KeyName="__IO_Element9" Name="Reset_EStop" Position="(240,750)" Client="IONet1.ResetEStop"/>
+	</IOObjects>
+	<!-- Headerfiles -->
+	<Options>
+	</Options>
+</Network>

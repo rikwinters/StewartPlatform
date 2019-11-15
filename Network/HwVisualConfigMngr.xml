@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<HwVisualConfigManager>
+	<HwVisualConfig Key="__HW_MAIN_PLC__" DeviceType="CP102" Top="20" Left="20"/>
+	<HwVisualConfig Key="AM4411" Top="177" Left="20"/>
+	<HwVisualConfig Key="AM4412" Top="177" Left="20"/>
+	<HwVisualConfig Key="DM1611" Top="177" Left="20"/>
+</HwVisualConfigManager>

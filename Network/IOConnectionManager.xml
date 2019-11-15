@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<IOConnectionManager Version="0" Detail="0" PLC="">
+	<!-- List of Entries -->
+	<Entry Name="**IOCONN_EMPTY**" Objectsize="284">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection SortIndex="20" KeyName="000020"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Enable_circuit" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Output1" ObjClt="IONet1" Client="EnableCircuit" IOI="Output" Type="Digital" SortIndex="5" KeyName="000005"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="I1" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AI1" ObjClt="IONet1" Client="I1" IOI="Input" Type="Analog" SortIndex="14" KeyName="000014"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="I2" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AI2" ObjClt="IONet1" Client="I2" IOI="Input" Type="Analog" SortIndex="15" KeyName="000015"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="I3" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AI3" ObjClt="IONet1" Client="I3" IOI="Input" Type="Analog" SortIndex="16" KeyName="000016"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="I4" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AI4" ObjClt="IONet1" Client="I4" IOI="Input" Type="Analog" SortIndex="17" KeyName="000017"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="I5" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4412" Server="AI1" ObjClt="IONet1" Client="I5" IOI="Input" Type="Analog" SortIndex="18" KeyName="000018"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="I6" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4412" Server="AI2" ObjClt="IONet1" Client="I6" IOI="Input" Type="Analog" SortIndex="19" KeyName="000019"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="O1" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AO1" ObjClt="IONet1" Client="O1" IOI="Output" Type="Analog" SortIndex="8" KeyName="000008"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="O2" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AO2" ObjClt="IONet1" Client="O2" IOI="Output" Type="Analog" SortIndex="9" KeyName="000009"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="O3" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AO3" ObjClt="IONet1" Client="O3" IOI="Output" Type="Analog" SortIndex="10" KeyName="000010"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="O4" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4411" Server="AO4" ObjClt="IONet1" Client="O4" IOI="Output" Type="Analog" SortIndex="11" KeyName="000011"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="O5" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4412" Server="AO1" ObjClt="IONet1" Client="O5" IOI="Output" Type="Analog" SortIndex="12" KeyName="000012"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="O6" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="AM4412" Server="AO2" ObjClt="IONet1" Client="O6" IOI="Output" Type="Analog" SortIndex="13" KeyName="000013"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Pressurize" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Output4" ObjClt="IONet1" Client="Pressurize" IOI="Output" Type="Digital" SortIndex="7" KeyName="000007"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Reset_button" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Input5" ObjClt="IONet1" Client="ResetButton" IOI="Input" Type="Digital" SortIndex="4" KeyName="000004"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Reset_EStop" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Output5" ObjClt="IONet1" Client="ResetEStop" IOI="Output" Type="Digital" SortIndex="21" KeyName="000021"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Start_button" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Input3" ObjClt="IONet1" Client="StartButton" IOI="Input" Type="Digital" SortIndex="0" KeyName="000000"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Start_pumps" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Output3" ObjClt="IONet1" Client="StartPumps" IOI="Output" Type="Digital" SortIndex="6" KeyName="000006"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Stop_button" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Input4" ObjClt="IONet1" Client="StopButton" IOI="Input" Type="Digital" SortIndex="3" KeyName="000003"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="System_OK_lamp" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Output2" ObjClt="IONet1" Client="SystemOKLamp" IOI="Output" Type="Digital" SortIndex="1" KeyName="000001"/>
+		</IOConnections>
+	</Entry>
+	<!-- List of Folders -->
+</IOConnectionManager>
