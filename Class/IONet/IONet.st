@@ -37,8 +37,10 @@
 		<Client Name="ResetButton" Required="true" Internal="false"/>
 		<Client Name="ResetEStop" Required="true" Internal="false"/>
 		<Client Name="StartButton" Required="true" Internal="false"/>
+		<Client Name="StartButtonLamp" Required="true" Internal="false"/>
 		<Client Name="StartPumps" Required="true" Internal="false"/>
 		<Client Name="StopButton" Required="true" Internal="false"/>
+		<Client Name="SystemEnable" Required="true" Internal="false"/>
 		<Client Name="SystemOKLamp" Required="true" Internal="false"/>
 	</Channels>
 </Class>
@@ -67,6 +69,8 @@ IONet : CLASS
 	I4 	: CltCh_DINT;
 	I5 	: CltCh_DINT;
 	I6 	: CltCh_DINT;
+	StartButtonLamp 	: CltCh_DINT;
+	SystemEnable 	: CltCh_DINT;
   //Variables:
   //Functions:
 	
@@ -76,6 +80,14 @@ IONet : CLASS
 		END_VAR
 		VAR_OUTPUT
 			state (EAX) 	: UDINT;
+		END_VAR;
+	
+	FUNCTION LimitOutput
+		VAR_INPUT
+			unlimited_output 	: DINT;
+		END_VAR
+		VAR_OUTPUT
+			limited_output 	: DINT;
 		END_VAR;
   //Tables:
 	FUNCTION @STD
@@ -92,7 +104,7 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-1$UINT, 20$UINT, 0$UINT, 
+1$UINT, 22$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
@@ -118,6 +130,8 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.I4.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1104548358), "I4", 
 (::IONet.I5.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(919675536), "I5", 
 (::IONet.I6.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(2950198058), "I6", 
+(::IONet.StartButtonLamp.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1027290706), "StartButtonLamp", 
+(::IONet.SystemEnable.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(3093689892), "SystemEnable", 
 END_FUNCTION
 
 
@@ -163,29 +177,50 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
 		state (EAX) 	: UDINT;
 	END_VAR
 
+  // Read all inputs
 	StartButton := StartButton.Read();
 	StopButton := StopButton.Read();
 	ResetButton := ResetButton.Read();
-  ResetEStop := 1;
-  if ResetButton = 1 then
-    SystemOKLamp := 1;
+  SystemEnable := SystemEnable.Read(); // Safety circuit input
+  I1 := I1.Read();
+  I2 := I2.Read();
+  I3 := I3.Read();
+  I4 := I4.Read();
+  I5 := I5.Read();
+  I6 := I6.Read();
+  
+  // If safety circuit is OK, enable circuit and pumps
+  if SystemEnable = 1 then
+    // TODO: reset lamp uit wanneer system enabled en aan wanneer niet enabled
+    // StartButtonLamp := 1;
+    SystemOKLamp := 0;
     EnableCircuit := 1;
-    StartPumps := 1;
-    Pressurize := 1;
+    StartPumps := 1; // ventielenblok
+    // TODO: wanneer pressurize hoog zetten?
+    Pressurize := 1; // geen beweging wanneer 0
   else
+    StartButtonLamp := 0;
+    ResetEStop := 0;
     SystemOKLamp := 0;
     EnableCircuit := 0;
     StartPumps := 0;
-    Pressurize := 0;
+    Pressurize := 0; // geen beweging wanneer 0
+  end_if;
+
+  // Pressing the ResetButton (blue) resets the safety circuit
+  if ResetButton = 1 then
+    ResetEStop := 1;
   end_if;
   
+  // StartButton (green)
   if StartButton = 1 then
-    O1 := -4000;
+    O1 := 4000;
     O2 := 4000;
-    O3 := -4000;
+    O3 := 4000;
     O4 := 4000;
-    O5 := -4000;
+    O5 := 4000;
     O6 := 4000;
+  // StopButton (red)  
   elsif StopButton = 1 then
     O1 := -4000;
     O2 := -4000;
@@ -193,6 +228,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O4 := -4000;
     O5 := -4000;
     O6 := -4000;
+  // Neither start nor stop is pressed
   else
     O1 := 0;
     O2 := 0;
@@ -202,11 +238,21 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O6 := 0;  
   end_if;
 
+  // Limit the outputs to their maximum range
+  O1 := LimitOutput(unlimited_output:=O1);
+  O2 := LimitOutput(unlimited_output:=O2);
+  O3 := LimitOutput(unlimited_output:=O3);
+  O4 := LimitOutput(unlimited_output:=O4);
+  O5 := LimitOutput(unlimited_output:=O5);
+  O6 := LimitOutput(unlimited_output:=O6);
+  
+  // Write all outputs
   SystemOKLamp.Write(SystemOKLamp);
   EnableCircuit.Write(EnableCircuit);
   StartPumps.Write(StartPumps);
   Pressurize.Write(Pressurize);
   ResetEStop.Write(ResetEStop);
+  StartButtonLamp.Write(StartButtonLamp);
   O1.Write(O1);
   O2.Write(O2);
   O3.Write(O3);
@@ -216,4 +262,23 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   
   state := READY;
 
+END_FUNCTION
+
+// Saturate the outputs in range -10000 to +10000
+FUNCTION IONet::LimitOutput
+	VAR_INPUT
+		unlimited_output 	: DINT;
+	END_VAR
+	VAR_OUTPUT
+		limited_output 	: DINT;
+	END_VAR
+  
+  if unlimited_output > 10000 then
+    limited_output := 10000;
+  elsif unlimited_output < -10000 then
+    limited_output := -10000;
+  else
+    limited_output := unlimited_output;
+  end_if;
+  
 END_FUNCTION

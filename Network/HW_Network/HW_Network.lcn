@@ -31,19 +31,19 @@
 				<Client Name="AI1_Freq"/>
 				<Client Name="AI1_Max" Value="10000"/>
 				<Client Name="AI1_Min" Value="-10000"/>
-				<Client Name="AI1Config" Value="0"/>
+				<Client Name="AI1Config" Value="1"/>
 				<Client Name="AI2_Freq"/>
 				<Client Name="AI2_Max" Value="10000"/>
 				<Client Name="AI2_Min" Value="-10000"/>
-				<Client Name="AI2Config"/>
+				<Client Name="AI2Config" Value="1"/>
 				<Client Name="AI3_Freq"/>
 				<Client Name="AI3_Max" Value="10000"/>
 				<Client Name="AI3_Min" Value="-10000"/>
-				<Client Name="AI3Config"/>
+				<Client Name="AI3Config" Value="1"/>
 				<Client Name="AI4_Freq"/>
 				<Client Name="AI4_Max" Value="10000"/>
 				<Client Name="AI4_Min" Value="-10000"/>
-				<Client Name="AI4Config"/>
+				<Client Name="AI4Config" Value="1"/>
 				<Client Name="AO1_Max" Value="10000"/>
 				<Client Name="AO1_Min" Value="-10000"/>
 				<Client Name="AO2_Max" Value="10000"/>
@@ -169,11 +169,11 @@
 				<Client Name="AI1_Freq"/>
 				<Client Name="AI1_Max" Value="10000"/>
 				<Client Name="AI1_Min" Value="-10000"/>
-				<Client Name="AI1Config"/>
+				<Client Name="AI1Config" Value="1"/>
 				<Client Name="AI2_Freq"/>
 				<Client Name="AI2_Max" Value="10000"/>
 				<Client Name="AI2_Min" Value="-10000"/>
-				<Client Name="AI2Config"/>
+				<Client Name="AI2Config" Value="1"/>
 				<Client Name="AI3_Freq"/>
 				<Client Name="AI3_Max" Value="10000"/>
 				<Client Name="AI3_Min" Value="-10000"/>

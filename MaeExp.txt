@@ -1,5 +1,5 @@
 [CRC]
-6AB0FA11
+350FE176
 [VERSION]
 2.07
 [ENUM]
@@ -116,8 +116,10 @@ t_AM_Errors@AM441 : BINT
 "DINT","Reset_button",
 "DINT","Reset_EStop",
 "DINT","Start_button",
+"DINT","Start_button_lamp",
 "DINT","Start_pumps",
 "DINT","Stop_button",
+"DINT","System_enable_input",
 "DINT","System_OK_lamp",
 [OBJECTS]
 "AM441","AM4411",{6A72619A-3DEB-4DC6-A6F9-E4584D1388C6},

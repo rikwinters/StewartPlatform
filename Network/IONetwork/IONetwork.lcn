@@ -28,8 +28,10 @@
 				<Client Name="ResetButton"/>
 				<Client Name="ResetEStop"/>
 				<Client Name="StartButton"/>
+				<Client Name="StartButtonLamp"/>
 				<Client Name="StartPumps"/>
 				<Client Name="StopButton"/>
+				<Client Name="SystemEnable"/>
 				<Client Name="SystemOKLamp"/>
 			</Channels>
 		</Object>
@@ -58,12 +60,16 @@
 		<Connection Source="IONet1.I5" Destination="__IO_Element32" Vertices="(1050,1440),(540,1440)," IOObject="I5"/>
 		<Connection Source="IONet1.I6" Destination="__IO_Element42" Vertices="(1050,1500),(540,1500)," IOObject="I6"/>
 		<Connection Source="IONet1.ResetEStop" Destination="__IO_Element9" Vertices="(1050,780),(540,780)," IOObject="Reset_EStop"/>
+		<Connection Source="IONet1.StartButtonLamp" Destination="__IO_Element10" Vertices="(1050,1560),(540,1560)," IOObject="Start_button_lamp"/>
+		<Connection Source="IONet1.SystemEnable" Destination="__IO_Element03" Vertices="(1050,1620),(540,1620)," IOObject="System_enable_input"/>
 	</Connections>
 	<!-- List of temp data objects in this network -->
 	<IOObjects>
 		<IOObject KeyName="__IO_Element01" Name="Pressurize" Position="(240,690)" Client="IONet1.Pressurize"/>
 		<IOObject KeyName="__IO_Element02" Name="I2" Position="(240,1230)" Client="IONet1.I2"/>
+		<IOObject KeyName="__IO_Element03" Name="System_enable_input" Position="(240,1590)" Client="IONet1.SystemEnable"/>
 		<IOObject KeyName="__IO_Element1" Name="Start_button" Position="(240,330)" Client="IONet1.StartButton"/>
+		<IOObject KeyName="__IO_Element10" Name="Start_button_lamp" Position="(240,1530)" Client="IONet1.StartButtonLamp"/>
 		<IOObject KeyName="__IO_Element11" Name="O2" Position="(240,870)" Client="IONet1.O2"/>
 		<IOObject KeyName="__IO_Element12" Name="I3" Position="(240,1290)" Client="IONet1.I3"/>
 		<IOObject KeyName="__IO_Element2" Name="System_OK_lamp" Position="(240,570)" Client="IONet1.SystemOKLamp"/>

@@ -78,7 +78,7 @@ END_FUNCTION
 
 #ifdef __LSLLDR_IOELEMENTS__
 FUNCTION GLOBAL TAB _IO_ELEMENTS_TAB
-0001$UINT, 0020$UINT, 
+0001$UINT, 0022$UINT, 
 "Enable_circuit", "DM1611.Output1", 
 "I1", "AM4411.AI1", 
 "I2", "AM4411.AI2", 
@@ -96,10 +96,12 @@ FUNCTION GLOBAL TAB _IO_ELEMENTS_TAB
 "Reset_button", "DM1611.Input5", 
 "Reset_EStop", "DM1611.Output5", 
 "Start_button", "DM1611.Input3", 
+"Start_button_lamp", "DM1611.Output6", 
 "Start_pumps", "DM1611.Output3", 
 "Stop_button", "DM1611.Input4", 
+"System_enable_input", "DM1611.Input1", 
 "System_OK_lamp", "DM1611.Output2", 
-0020$UINT, 
+0022$UINT, 
 "Enable_circuit", "IONet1.EnableCircuit", 
 "I1", "IONet1.I1", 
 "I2", "IONet1.I2", 
@@ -117,8 +119,10 @@ FUNCTION GLOBAL TAB _IO_ELEMENTS_TAB
 "Reset_button", "IONet1.ResetButton", 
 "Reset_EStop", "IONet1.ResetEStop", 
 "Start_button", "IONet1.StartButton", 
+"Start_button_lamp", "IONet1.StartButtonLamp", 
 "Start_pumps", "IONet1.StartPumps", 
 "Stop_button", "IONet1.StopButton", 
+"System_enable_input", "IONet1.SystemEnable", 
 "System_OK_lamp", "IONet1.SystemOKLamp", 
 END_FUNCTION
 #endif //__LSLLDR_IOELEMENTS__

@@ -249,17 +249,20 @@ TO_UDINT(14), "DataBuffer", TO_UDINT(7), "m_udLength",
 
 //Initialization values
 0$UDINT,
-52$UDINT,
+57$UDINT,
 TO_UDINT(0), "LEDControl", TO_UDINT(0),//|HW_Network.AM4411.LEDControl;
 TO_UDINT(0), "Place", TO_UDINT(1),//|HW_Network.AM4411.Place;
 TO_UDINT(0), "Required", TO_UDINT(1),//|HW_Network.AM4411.Required;
-TO_UDINT(0), "AI1Config", TO_UDINT(0),//|HW_Network.AM4411.AI1Config;
+TO_UDINT(0), "AI1Config", TO_UDINT(1),//|HW_Network.AM4411.AI1Config;
 TO_UDINT(0), "AI1_Min", TO_UDINT(-10000),//|HW_Network.AM4411.AI1_Min;
 TO_UDINT(0), "AI1_Max", TO_UDINT(10000),//|HW_Network.AM4411.AI1_Max;
+TO_UDINT(0), "AI2Config", TO_UDINT(1),//|HW_Network.AM4411.AI2Config;
 TO_UDINT(0), "AI2_Min", TO_UDINT(-10000),//|HW_Network.AM4411.AI2_Min;
 TO_UDINT(0), "AI2_Max", TO_UDINT(10000),//|HW_Network.AM4411.AI2_Max;
+TO_UDINT(0), "AI3Config", TO_UDINT(1),//|HW_Network.AM4411.AI3Config;
 TO_UDINT(0), "AI3_Min", TO_UDINT(-10000),//|HW_Network.AM4411.AI3_Min;
 TO_UDINT(0), "AI3_Max", TO_UDINT(10000),//|HW_Network.AM4411.AI3_Max;
+TO_UDINT(0), "AI4Config", TO_UDINT(1),//|HW_Network.AM4411.AI4Config;
 TO_UDINT(0), "AI4_Min", TO_UDINT(-10000),//|HW_Network.AM4411.AI4_Min;
 TO_UDINT(0), "AI4_Max", TO_UDINT(10000),//|HW_Network.AM4411.AI4_Max;
 TO_UDINT(0), "AO1_Min", TO_UDINT(-10000),//|HW_Network.AM4411.AO1_Min;
@@ -273,8 +276,10 @@ TO_UDINT(0), "AO4_Max", TO_UDINT(10000),//|HW_Network.AM4411.AO4_Max;
 TO_UDINT(1), "LEDControl", TO_UDINT(0),//|HW_Network.AM4412.LEDControl;
 TO_UDINT(1), "Place", TO_UDINT(2),//|HW_Network.AM4412.Place;
 TO_UDINT(1), "Required", TO_UDINT(1),//|HW_Network.AM4412.Required;
+TO_UDINT(1), "AI1Config", TO_UDINT(1),//|HW_Network.AM4412.AI1Config;
 TO_UDINT(1), "AI1_Min", TO_UDINT(-10000),//|HW_Network.AM4412.AI1_Min;
 TO_UDINT(1), "AI1_Max", TO_UDINT(10000),//|HW_Network.AM4412.AI1_Max;
+TO_UDINT(1), "AI2Config", TO_UDINT(1),//|HW_Network.AM4412.AI2Config;
 TO_UDINT(1), "AI2_Min", TO_UDINT(-10000),//|HW_Network.AM4412.AI2_Min;
 TO_UDINT(1), "AI2_Max", TO_UDINT(10000),//|HW_Network.AM4412.AI2_Max;
 TO_UDINT(1), "AI3_Min", TO_UDINT(-10000),//|HW_Network.AM4412.AI3_Min;
