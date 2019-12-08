@@ -11,6 +11,14 @@
 			CyclicTime = "10 ms">
 			<Channels>
 				<Server Name="ClassSvr"/>
+				<Server Name="Counter"/>
+				<Server Name="Counter2"/>
+				<Server Name="Counter3"/>
+				<Server Name="Direction"/>
+				<Server Name="Direction2"/>
+				<Server Name="Direction3"/>
+				<Server Name="Kd"/>
+				<Server Name="Kp"/>
 				<Client Name="EnableCircuit"/>
 				<Client Name="I1"/>
 				<Client Name="I2"/>

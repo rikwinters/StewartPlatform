@@ -20,6 +20,14 @@
 	Objectsize         = "(720,360)">
 	<Channels>
 		<Server Name="ClassSvr" GUID="{19B44CA5-5782-49A2-A611-525455C23F88}" Visualized="false" Initialize="false" WriteProtected="true" Retentive="false"/>
+		<Server Name="Counter" GUID="{3C6AAB30-B85F-44DA-B5E6-0FFC40AB26B1}" Visualized="false" Initialize="true" DefValue="2000" WriteProtected="false" Retentive="File"/>
+		<Server Name="Counter2" GUID="{1F2B9C00-D76E-4FF5-85C1-E51225133EA4}" Visualized="false" Initialize="true" DefValue="8000" WriteProtected="false" Retentive="File"/>
+		<Server Name="Counter3" GUID="{CD9F49EE-BB67-4B92-9E03-F0C65F1992CE}" Visualized="false" Initialize="true" DefValue="5000" WriteProtected="false" Retentive="File"/>
+		<Server Name="Direction" GUID="{85ABB4C2-B932-4D28-BF9D-A6DBA894C0FE}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
+		<Server Name="Direction2" GUID="{64B34C4B-EFE9-4658-AAFB-AF843FB3930F}" Visualized="false" Initialize="true" DefValue="1" WriteProtected="false" Retentive="File"/>
+		<Server Name="Direction3" GUID="{DFA2BB11-7549-4EB0-BB32-6C26AF714199}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
+		<Server Name="Kd" GUID="{1E92B67D-0951-4DDF-BEE8-FD175E583416}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="true" Retentive="false"/>
+		<Server Name="Kp" GUID="{FF910E42-75DA-4A0F-8CEC-8625D31CEC11}" Visualized="false" Initialize="true" DefValue="5" WriteProtected="false" Retentive="File"/>
 		<Client Name="EnableCircuit" Required="true" Internal="false"/>
 		<Client Name="I1" Required="true" Internal="false"/>
 		<Client Name="I2" Required="true" Internal="false"/>
@@ -48,6 +56,14 @@
 IONet : CLASS
   //Servers:
 	ClassSvr 	: SvrChCmd_DINT;
+	Counter 	: SvrCh_DINT;
+	Counter2 	: SvrCh_DINT;
+	Counter3 	: SvrCh_DINT;
+	Direction 	: SvrCh_UDINT;
+	Direction2 	: SvrCh_DINT;
+	Direction3 	: SvrCh_DINT;
+	Kp 	: SvrCh_DINT;
+	Kd 	: SvrCh_DINT;
   //Clients:
 	StartButton 	: CltCh_DINT;
 	StopButton 	: CltCh_DINT;
@@ -73,6 +89,8 @@ IONet : CLASS
 	SystemEnable 	: CltCh_DINT;
   //Variables:
   //Functions:
+	
+	FUNCTION VIRTUAL GLOBAL Init;
 	
 	FUNCTION VIRTUAL GLOBAL CyWork
 		VAR_INPUT
@@ -104,11 +122,19 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-1$UINT, 22$UINT, 0$UINT, 
+9$UINT, 22$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
 (::IONet.ClassSvr.pMeth)$UINT, _CH_CMD$UINT, 2#0000000000000000$UINT, TO_UDINT(619352855), "ClassSvr", 
+(::IONet.Counter.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4268190306), "Counter", 
+(::IONet.Counter2.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3113736467), "Counter2", 
+(::IONet.Counter3.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3465603461), "Counter3", 
+(::IONet.Direction.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2055786332), "Direction", 
+(::IONet.Direction2.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2020748061), "Direction2", 
+(::IONet.Direction3.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(259333003), "Direction3", 
+(::IONet.Kp.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(960484805), "Kp", 
+(::IONet.Kd.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000000000$UINT, TO_UDINT(602210744), "Kd", 
 //Clients:
 (::IONet.StartButton.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1214826680), "StartButton", 
 (::IONet.StopButton.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(910407337), "StopButton", 
@@ -154,10 +180,60 @@ FUNCTION IONet::@STD
 
 	//Command Methods
 	InitCmdTable (nCmd := nSTDCMD + USER_CNT_IONet, pCmd := #vmt.CmdTable);
+	vmt.CmdTable.Init		:= #Init();
 	vmt.CmdTable.CyWork		:= #CyWork();
 	ClassSvr.pMeth		:= StoreCmd (pCmd := #vmt.CmdTable, SHARED);
 
 	IF ClassSvr.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Counter.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Counter.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Counter2.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Counter2.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Counter3.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Counter3.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Direction.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Direction.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Direction2.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Direction2.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Direction3.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Direction3.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Kp.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Kp.pMeth THEN
 		ret_code	:= C_OK;
 	ELSE
 		ret_code	:= C_OUTOF_NEAR;
@@ -168,6 +244,19 @@ END_FUNCTION
 
 //{{LSL_IMPLEMENTATION
 
+FUNCTION VIRTUAL GLOBAL IONet::Init
+  if _FirstScan then
+    Kp := 5;
+    Kd := 0;
+    Direction := 0;
+    Direction2 := 1;
+    Direction3 := 0;
+    Counter := 2000;
+    Counter2 := 6000;
+    Counter3 := 6000;
+  end_if;
+
+END_FUNCTION
 
 FUNCTION VIRTUAL GLOBAL IONet::CyWork
 	VAR_INPUT
@@ -192,8 +281,8 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   // If safety circuit is OK, enable circuit and pumps
   if SystemEnable = 1 then
     // TODO: reset lamp uit wanneer system enabled en aan wanneer niet enabled
-    // StartButtonLamp := 1;
-    SystemOKLamp := 0;
+    StartButtonLamp := 1;
+    SystemOKLamp := 1;
     EnableCircuit := 1;
     StartPumps := 1; // ventielenblok
     // TODO: wanneer pressurize hoog zetten?
@@ -204,7 +293,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     SystemOKLamp := 0;
     EnableCircuit := 0;
     StartPumps := 0;
-    Pressurize := 0; // geen beweging wanneer 0
+    Pressurize := 1; // geen beweging wanneer 0
   end_if;
 
   // Pressing the ResetButton (blue) resets the safety circuit
@@ -214,12 +303,45 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   
   // StartButton (green)
   if StartButton = 1 then
-    O1 := 4000;
-    O2 := 4000;
-    O3 := 4000;
-    O4 := 4000;
-    O5 := 4000;
-    O6 := 4000;
+    if Direction = 0 then
+      Counter += 50;
+      if Counter >= 8000 then
+        Direction := 1;
+      end_if;
+    else
+      Counter -= 50;
+      if Counter <= 2000 then
+        Direction := 0;
+      end_if;
+    end_if;
+    if Direction2 = 0 then
+      Counter2 += 50;
+      if Counter2 >= 8000 then
+        Direction2 := 1;
+      end_if;
+    else
+      Counter2 -= 50;
+      if Counter2 <= 2000 then
+        Direction2 := 0;
+      end_if;
+    end_if;
+    if Direction3 = 0 then
+      Counter3 += 50;
+      if Counter3 >= 8000 then
+        Direction3 := 1;
+      end_if;
+    else
+      Counter3 -= 50;
+      if Counter3 <= 2000 then
+        Direction3 := 0;
+      end_if;
+    end_if;
+    O1 := (Counter-I1)*Kp;
+    O2 := (Counter2-I2)*Kp;
+    O3 := (Counter2-I3)*Kp;
+    O4 := (Counter3-I4)*Kp;
+    O5 := (Counter3-I5)*Kp;
+    O6 := (Counter-I6)*Kp;
   // StopButton (red)  
   elsif StopButton = 1 then
     O1 := -4000;
@@ -230,12 +352,12 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O6 := -4000;
   // Neither start nor stop is pressed
   else
-    O1 := 0;
-    O2 := 0;
-    O3 := 0;
-    O4 := 0;
-    O5 := 0;
-    O6 := 0;  
+    O1 := (Counter-I1)*Kp;
+    O2 := (Counter2-I2)*Kp;
+    O3 := (Counter2-I3)*Kp;
+    O4 := (Counter3-I4)*Kp;
+    O5 := (Counter3-I5)*Kp;
+    O6 := (Counter-I6)*Kp;
   end_if;
 
   // Limit the outputs to their maximum range
