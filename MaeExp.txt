@@ -1,5 +1,5 @@
 [CRC]
-350FE176
+0EE32DE4
 [VERSION]
 2.07
 [ENUM]
@@ -114,11 +114,13 @@ t_AM_Errors@AM441 : BINT
 "DINT","O6",
 "DINT","Pressurize",
 "DINT","Reset_button",
+"DINT","Reset_button_lamp",
 "DINT","Reset_EStop",
 "DINT","Start_button",
 "DINT","Start_button_lamp",
 "DINT","Start_pumps",
 "DINT","Stop_button",
+"DINT","Stop_button_lamp",
 "DINT","System_enable_input",
 "DINT","System_OK_lamp",
 [OBJECTS]

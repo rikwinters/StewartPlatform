@@ -97,6 +97,12 @@
 			<IOConnection ObjSrv="DM1611" Server="Input5" ObjClt="IONet1" Client="ResetButton" IOI="Input" Type="Digital" SortIndex="15" KeyName="000004"/>
 		</IOConnections>
 	</Entry>
+	<Entry Name="Reset_button_lamp" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Output8" ObjClt="IONet1" Client="ResetButtonLamp" IOI="Output" Type="Digital" SortIndex="24" KeyName="000024"/>
+		</IOConnections>
+	</Entry>
 	<Entry Name="Reset_EStop" Objectsize="284" TempObj="true">
 		<!-- List of Connections -->
 		<IOConnections>
@@ -125,6 +131,12 @@
 		<!-- List of Connections -->
 		<IOConnections>
 			<IOConnection ObjSrv="DM1611" Server="Input4" ObjClt="IONet1" Client="StopButton" IOI="Input" Type="Digital" SortIndex="19" KeyName="000003"/>
+		</IOConnections>
+	</Entry>
+	<Entry Name="Stop_button_lamp" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Output7" ObjClt="IONet1" Client="StopButtonLamp" IOI="Output" Type="Digital" SortIndex="23" KeyName="000023"/>
 		</IOConnections>
 	</Entry>
 	<Entry Name="System_enable_input" Objectsize="284" TempObj="true">
