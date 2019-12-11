@@ -21,6 +21,8 @@
 				<Server Name="Kp"/>
 				<Server Name="Mode"/>
 				<Server Name="ModeCounter"/>
+				<Server Name="ModeDuration"/>
+				<Server Name="Speed"/>
 				<Server Name="System_state"/>
 				<Client Name="EnableCircuit"/>
 				<Client Name="I1"/>

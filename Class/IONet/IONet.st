@@ -30,6 +30,8 @@
 		<Server Name="Kp" GUID="{FF910E42-75DA-4A0F-8CEC-8625D31CEC11}" Visualized="false" Initialize="true" DefValue="5" WriteProtected="false" Retentive="File"/>
 		<Server Name="Mode" GUID="{51A31849-5FD4-4170-916B-0FF2D1727F49}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="ModeCounter" GUID="{3459DFA1-391E-4A69-8302-8D518A9BF8B0}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="ModeDuration" GUID="{F58F8E76-C6F8-4B6C-9578-C7F0B674E5B0}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Speed" GUID="{3A558FC9-2A03-4C35-AA8E-EC22ADE352F4}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="System_state" GUID="{98E84BF1-461A-4B9A-BBDF-DE3A70CB959C}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Client Name="EnableCircuit" Required="true" Internal="false"/>
 		<Client Name="I1" Required="true" Internal="false"/>
@@ -71,7 +73,9 @@ IONet : CLASS
 	Kd 	: SvrCh_DINT;
 	Mode 	: SvrCh_DINT;
 	ModeCounter 	: SvrCh_DINT;
+	ModeDuration 	: SvrCh_DINT;
 	System_state 	: SvrCh_DINT;
+	Speed 	: SvrCh_DINT;
   //Clients:
 	StartButton 	: CltCh_DINT;
 	StartButtonLamp 	: CltCh_DINT;
@@ -117,6 +121,20 @@ IONet : CLASS
 		VAR_OUTPUT
 			limited_output 	: DINT;
 		END_VAR;
+	
+	FUNCTION SetMode;
+	
+	FUNCTION InitializeCounters;
+	
+	FUNCTION UpdateCounters;
+	
+	FUNCTION CylRef
+		VAR_INPUT
+			cyl 	: DINT;
+		END_VAR
+		VAR_OUTPUT
+			ref 	: DINT;
+		END_VAR;
   //Tables:
 	FUNCTION @STD
 		VAR_OUTPUT
@@ -132,7 +150,7 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-12$UINT, 24$UINT, 0$UINT, 
+14$UINT, 24$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
@@ -147,7 +165,9 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.Kd.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(602210744), "Kd", 
 (::IONet.Mode.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2707401247), "Mode", 
 (::IONet.ModeCounter.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2564985527), "ModeCounter", 
+(::IONet.ModeDuration.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3065233199), "ModeDuration", 
 (::IONet.System_state.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1707214151), "System_state", 
+(::IONet.Speed.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4168236102), "Speed", 
 //Clients:
 (::IONet.StartButton.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1214826680), "StartButton", 
 (::IONet.StartButtonLamp.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1027290706), "StartButtonLamp", 
@@ -275,8 +295,22 @@ FUNCTION IONet::@STD
 		ret_code	:= C_OUTOF_NEAR;
 		RETURN;
 	END_IF;
+	ModeDuration.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF ModeDuration.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
 	System_state.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
 	IF System_state.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Speed.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Speed.pMeth THEN
 		ret_code	:= C_OK;
 	ELSE
 		ret_code	:= C_OUTOF_NEAR;
@@ -297,12 +331,14 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     Counter1 := 2000;
     Counter2 := 6000;
     Counter3 := 6000;
+    Speed := 10;          // Number of seconds for a move is 8000/100/Speed (e.g. Speed=10 takes 8 seconds for a move)
     System_state := 0;         // System state: 0 = SAFETY, 1 = ON, 2 = IDLE
     // SAFETY: a safety reset is required to go to System_state IDLE
     // ON: system is doing a sequence of movements
     // IDLE: System slowly moves to lowest position and stays there (controlled)
-    Mode := 0;          // Mode indicates which movement to perform
-    ModeCounter := 0;   // Counts when to shift to the next mode
+    Mode := 0;            // Mode indicates which movement to perform
+    ModeDuration := 1000; // Duration of one mode (in samples)
+    ModeCounter := 0;     // Counts when to shift to the next mode
     // Mode 1: up-down Z-direction (cylinder 1-6 use direction1 and counter1)
     // Mode 2: rotate yaw (cylinder 1,3,5 use direction1 and counter1, others use direction2 and counter2)
     // Mode 3: simultaneous roll-pitch (cylinder 1&6 use direction1 and counter1, cylinder 2&3 use direction2 and counter2, others use direction3 and counter3)
@@ -345,6 +381,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     System_state := 0;      // System state SAFETY
     Mode := 0;              // Mode starts at 0 again
     ModeCounter := 0;       // Set counter back to 0
+    InitializeCounters();   // Re-initialize counters
     // Turn everything off
     ResetEStop := 0;
     SystemOKLamp := 0;
@@ -397,46 +434,17 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   
   // State ON: perform movements according to the current Mode
   elsif System_state = 1 then
-    // TODO: incorporate different Modes
-    if Direction1 = 0 then
-      Counter1 += 50;
-      if Counter1 >= 8000 then
-        Direction1 := 1;
-      end_if;
-    else
-      Counter1 -= 50;
-      if Counter1 <= 2000 then
-        Direction1 := 0;
-      end_if;
-    end_if;
-    if Direction2 = 0 then
-      Counter2 += 50;
-      if Counter2 >= 8000 then
-        Direction2 := 1;
-      end_if;
-    else
-      Counter2 -= 50;
-      if Counter2 <= 2000 then
-        Direction2 := 0;
-      end_if;
-    end_if;
-    if Direction3 = 0 then
-      Counter3 += 50;
-      if Counter3 >= 8000 then
-        Direction3 := 1;
-      end_if;
-    else
-      Counter3 -= 50;
-      if Counter3 <= 2000 then
-        Direction3 := 0;
-      end_if;
-    end_if;
-    O1 := (Counter1-I1)*Kp;
-    O2 := (Counter2-I2)*Kp;
-    O3 := (Counter2-I3)*Kp;
-    O4 := (Counter3-I4)*Kp;
-    O5 := (Counter3-I5)*Kp;
-    O6 := (Counter1-I6)*Kp;
+    // Set the mode
+    SetMode();
+    // Update the counters
+    UpdateCounters();
+    // Apply controllers
+    O1 := (CylRef(cyl:=1)-I1)*Kp;
+    O2 := (CylRef(cyl:=2)-I2)*Kp;
+    O3 := (CylRef(cyl:=3)-I3)*Kp;
+    O4 := (CylRef(cyl:=4)-I4)*Kp;
+    O5 := (CylRef(cyl:=5)-I5)*Kp;
+    O6 := (CylRef(cyl:=6)-I6)*Kp;
     
   // State SAFETY: Do nothing (since we cannot control the cylinders anyway)
   else
@@ -502,4 +510,127 @@ FUNCTION IONet::LimitOutput
     limited_output := unlimited_output;
   end_if;
   
+END_FUNCTION
+
+
+FUNCTION IONet::SetMode
+  ModeCounter += 1;
+  if ModeCounter >= ModeDuration then
+    ModeCounter := 0;       // Reset ModeCounter
+    if mode >= 3 then
+      Mode := 0;            // Go back to mode 0
+    else
+      Mode += 1;            // Go to next mode
+    end_if;
+    InitializeCounters();
+  end_if;  
+END_FUNCTION
+
+
+FUNCTION IONet::InitializeCounters
+  if Mode = 1 then
+    Counter1 := 4000;
+    Direction1 := 0;
+    Counter2 := 0;
+    Direction2 := 0;
+    Counter3 := 0;
+    Direction3 := 0;
+  elsif Mode = 2 then 
+    Counter1 := 4000;
+    Direction1 := 0;
+    Counter2 := 4000;
+    Direction2 := 1;
+    Counter3 := 0;
+    Direction3 := 0;
+  elsif Mode = 3 then 
+    Counter1 := 2000;
+    Direction1 := 0;
+    Counter2 := 6000;
+    Direction2 := 0;
+    Counter3 := 6000;
+    Direction3 := 1;
+  else
+    Counter1 := 0;
+    Direction1 := 0;
+    Counter2 := 0;
+    Direction2 := 0;
+    Counter3 := 0;
+    Direction3 := 0;
+  end_if;  
+END_FUNCTION
+
+
+FUNCTION IONet::UpdateCounters
+  if Direction1 = 0 then
+    Counter1 += Speed;
+    if Counter1 >= 8000 then
+      Direction1 := 1;
+    end_if;
+  else
+    Counter1 -= Speed;
+    if Counter1 <= 2000 then
+      Direction1 := 0;
+    end_if;
+  end_if;
+  if Direction2 = 0 then
+    Counter2 += Speed;
+    if Counter2 >= 8000 then
+      Direction2 := 1;
+    end_if;
+  else
+    Counter2 -= Speed;
+    if Counter2 <= 2000 then
+      Direction2 := 0;
+    end_if;
+  end_if;
+  if Direction3 = 0 then
+    Counter3 += Speed;
+    if Counter3 >= 8000 then
+      Direction3 := 1;
+    end_if;
+  else
+    Counter3 -= Speed;
+    if Counter3 <= 2000 then
+      Direction3 := 0;
+    end_if;
+  end_if;
+END_FUNCTION
+
+// Get the reference for a certain cylinder
+FUNCTION IONet::CylRef
+	VAR_INPUT
+		cyl 	: DINT;
+	END_VAR
+	VAR_OUTPUT
+		ref 	: DINT;
+	END_VAR
+  
+  if mode = 1 then
+    // All cylinders follow reference of Counter1
+    ref := Counter1;
+  elsif mode = 2 then
+    // Cylinders 1, 3 and 5 follow reference of Counter1, others follow Counter2
+    case cyl of
+      1: ref := Counter1;
+      2: ref := Counter2;
+      3: ref := Counter1;
+      4: ref := Counter2;
+      5: ref := Counter1;
+      6: ref := Counter2;
+    end_case;
+  elsif mode = 3 then
+    // Cylinders 1&6 follow reference of Counter1, 2&3 follow Counter2, 4&5 follow Counter3
+    case cyl of
+      1: ref := Counter1;
+      2: ref := Counter2;
+      3: ref := Counter2;
+      4: ref := Counter3;
+      5: ref := Counter3;
+      6: ref := Counter1;
+    end_case;
+  else
+    // All cylinders follow reference of Counter1
+    ref := Counter1;
+  end_if;
+
 END_FUNCTION
