@@ -26,11 +26,23 @@
 		<Server Name="Direction1" GUID="{85ABB4C2-B932-4D28-BF9D-A6DBA894C0FE}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
 		<Server Name="Direction2" GUID="{64B34C4B-EFE9-4658-AAFB-AF843FB3930F}" Visualized="false" Initialize="true" DefValue="1" WriteProtected="false" Retentive="File"/>
 		<Server Name="Direction3" GUID="{DFA2BB11-7549-4EB0-BB32-6C26AF714199}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
+		<Server Name="Error1" GUID="{36657BA5-5B16-402F-BF1E-150655E8F56C}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Error2" GUID="{4CED374D-21B4-47A4-BD7F-B3B6021D92DA}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Error3" GUID="{4A98B4ED-D970-4386-BB73-69D2E87FDFD9}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Error4" GUID="{82B8BD54-9235-480C-943F-A435A56F64AC}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Error5" GUID="{B068579D-A7E3-4A39-8FB0-646E552A1AAD}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Error6" GUID="{5E3B7566-81DD-411E-804E-C306BEFC9B55}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Kd" GUID="{1E92B67D-0951-4DDF-BEE8-FD175E583416}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
 		<Server Name="Kp" GUID="{FF910E42-75DA-4A0F-8CEC-8625D31CEC11}" Visualized="false" Initialize="true" DefValue="5" WriteProtected="false" Retentive="File"/>
 		<Server Name="Mode" GUID="{51A31849-5FD4-4170-916B-0FF2D1727F49}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="ModeCounter" GUID="{3459DFA1-391E-4A69-8302-8D518A9BF8B0}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="ModeDuration" GUID="{F58F8E76-C6F8-4B6C-9578-C7F0B674E5B0}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Prior_error1" GUID="{38480575-CF1F-4ED7-A69B-99C3AD20E940}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Prior_error2" GUID="{3D1DB2FB-E40C-4A7A-BA37-C0049840B140}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Prior_error3" GUID="{AA60D170-B55F-4D31-B5F6-E253A3F459B8}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Prior_error4" GUID="{4FCAB28C-8412-40C3-BBD3-B520C2289F25}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Prior_error5" GUID="{2C5167DF-F9B6-49D8-836D-4E841065A1D9}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Prior_error6" GUID="{CB10A9E0-6D8E-4721-878C-F41BEC502B75}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Speed" GUID="{3A558FC9-2A03-4C35-AA8E-EC22ADE352F4}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="System_state" GUID="{98E84BF1-461A-4B9A-BBDF-DE3A70CB959C}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Client Name="EnableCircuit" Required="true" Internal="false"/>
@@ -76,6 +88,18 @@ IONet : CLASS
 	ModeDuration 	: SvrCh_DINT;
 	System_state 	: SvrCh_DINT;
 	Speed 	: SvrCh_DINT;
+	Prior_error1 	: SvrCh_DINT;
+	Prior_error2 	: SvrCh_DINT;
+	Prior_error3 	: SvrCh_DINT;
+	Prior_error4 	: SvrCh_DINT;
+	Prior_error5 	: SvrCh_DINT;
+	Prior_error6 	: SvrCh_DINT;
+	Error1 	: SvrCh_DINT;
+	Error2 	: SvrCh_DINT;
+	Error3 	: SvrCh_DINT;
+	Error4 	: SvrCh_DINT;
+	Error5 	: SvrCh_DINT;
+	Error6 	: SvrCh_DINT;
   //Clients:
 	StartButton 	: CltCh_DINT;
 	StartButtonLamp 	: CltCh_DINT;
@@ -135,6 +159,10 @@ IONet : CLASS
 		VAR_OUTPUT
 			ref 	: DINT;
 		END_VAR;
+	
+	FUNCTION ResetPriorErrors;
+	
+	FUNCTION SetPriorErrors;
   //Tables:
 	FUNCTION @STD
 		VAR_OUTPUT
@@ -150,7 +178,7 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-14$UINT, 24$UINT, 0$UINT, 
+26$UINT, 24$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
@@ -168,6 +196,18 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.ModeDuration.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3065233199), "ModeDuration", 
 (::IONet.System_state.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1707214151), "System_state", 
 (::IONet.Speed.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4168236102), "Speed", 
+(::IONet.Prior_error1.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(414269587), "Prior_error1", 
+(::IONet.Prior_error2.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2176323881), "Prior_error2", 
+(::IONet.Prior_error3.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4139721151), "Prior_error3", 
+(::IONet.Prior_error4.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1759228956), "Prior_error4", 
+(::IONet.Prior_error5.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(534545546), "Prior_error5", 
+(::IONet.Prior_error6.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2262160688), "Prior_error6", 
+(::IONet.Error1.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1863685359), "Error1", 
+(::IONet.Error2.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4129080661), "Error2", 
+(::IONet.Error3.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2166093251), "Error3", 
+(::IONet.Error4.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(528441440), "Error4", 
+(::IONet.Error5.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1752715510), "Error5", 
+(::IONet.Error6.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4050714956), "Error6", 
 //Clients:
 (::IONet.StartButton.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1214826680), "StartButton", 
 (::IONet.StartButtonLamp.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1027290706), "StartButtonLamp", 
@@ -316,6 +356,90 @@ FUNCTION IONet::@STD
 		ret_code	:= C_OUTOF_NEAR;
 		RETURN;
 	END_IF;
+	Prior_error1.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Prior_error1.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Prior_error2.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Prior_error2.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Prior_error3.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Prior_error3.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Prior_error4.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Prior_error4.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Prior_error5.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Prior_error5.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Prior_error6.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Prior_error6.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Error1.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Error1.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Error2.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Error2.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Error3.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Error3.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Error4.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Error4.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Error5.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Error5.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Error6.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Error6.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
 
 END_FUNCTION
 
@@ -332,7 +456,7 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     Counter2 := 6000;
     Counter3 := 6000;
     Speed := 10;          // Number of seconds for a move is 8000/100/Speed (e.g. Speed=10 takes 8 seconds for a move)
-    System_state := 0;         // System state: 0 = SAFETY, 1 = ON, 2 = IDLE
+    System_state := 0;    // System state: 0 = SAFETY, 1 = ON, 2 = IDLE
     // SAFETY: a safety reset is required to go to System_state IDLE
     // ON: system is doing a sequence of movements
     // IDLE: System slowly moves to lowest position and stays there (controlled)
@@ -343,6 +467,7 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     // Mode 2: rotate yaw (cylinder 1,3,5 use direction1 and counter1, others use direction2 and counter2)
     // Mode 3: simultaneous roll-pitch (cylinder 1&6 use direction1 and counter1, cylinder 2&3 use direction2 and counter2, others use direction3 and counter3)
     // Mode 4: planar x-y direction TODO
+    ResetPriorErrors();   // Reset prior errors for derivative control action
   end_if;
 
 END_FUNCTION
@@ -382,6 +507,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     Mode := 0;              // Mode starts at 0 again
     ModeCounter := 0;       // Set counter back to 0
     InitializeCounters();   // Re-initialize counters
+    ResetPriorErrors();     // Reset prior errors for derivative control action
     // Turn everything off
     ResetEStop := 0;
     SystemOKLamp := 0;
@@ -396,6 +522,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     if System_state = 1 then
       // Stop state ON and go to state IDLE
       System_state := 2;
+      ResetPriorErrors();
     end_if;
     // Otherwise this does nothing
   elsif StartButton = 1 then
@@ -431,6 +558,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O4 := -4000;
     O5 := -4000;
     O6 := -4000;
+    
   
   // State ON: perform movements according to the current Mode
   elsif System_state = 1 then
@@ -438,13 +566,22 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     SetMode();
     // Update the counters
     UpdateCounters();
+    // Calculate errors
+    Error1 := CylRef(cyl:=1)-I1;
+    Error2 := CylRef(cyl:=2)-I2;
+    Error3 := CylRef(cyl:=3)-I3;
+    Error4 := CylRef(cyl:=4)-I4;
+    Error5 := CylRef(cyl:=5)-I5;
+    Error6 := CylRef(cyl:=6)-I6;
     // Apply controllers
-    O1 := (CylRef(cyl:=1)-I1)*Kp;
-    O2 := (CylRef(cyl:=2)-I2)*Kp;
-    O3 := (CylRef(cyl:=3)-I3)*Kp;
-    O4 := (CylRef(cyl:=4)-I4)*Kp;
-    O5 := (CylRef(cyl:=5)-I5)*Kp;
-    O6 := (CylRef(cyl:=6)-I6)*Kp;
+    O1 := Error1*Kp + (Error1-Prior_error1)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O2 := Error2*Kp + (Error2-Prior_error2)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O3 := Error3*Kp + (Error3-Prior_error3)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O4 := Error4*Kp + (Error4-Prior_error4)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O5 := Error5*Kp + (Error5-Prior_error5)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O6 := Error6*Kp + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    // Set prior errors for next iteration
+    SetPriorErrors();
     
   // State SAFETY: Do nothing (since we cannot control the cylinders anyway)
   else
@@ -633,4 +770,24 @@ FUNCTION IONet::CylRef
     ref := Counter1;
   end_if;
 
+END_FUNCTION
+
+
+FUNCTION IONet::ResetPriorErrors
+  Prior_error1 := 0;    // Used for derivative control action on cylinder 1
+  Prior_error2 := 0;    // Used for derivative control action on cylinder 2
+  Prior_error3 := 0;    // Used for derivative control action on cylinder 3
+  Prior_error4 := 0;    // Used for derivative control action on cylinder 4
+  Prior_error5 := 0;    // Used for derivative control action on cylinder 5
+  Prior_error6 := 0;    // Used for derivative control action on cylinder 6
+END_FUNCTION
+
+
+FUNCTION IONet::SetPriorErrors
+  Prior_error1 := Error1;    // Used for derivative control action on cylinder 1
+  Prior_error2 := Error2;    // Used for derivative control action on cylinder 2
+  Prior_error3 := Error3;    // Used for derivative control action on cylinder 3
+  Prior_error4 := Error4;    // Used for derivative control action on cylinder 4
+  Prior_error5 := Error5;    // Used for derivative control action on cylinder 5
+  Prior_error6 := Error6;    // Used for derivative control action on cylinder 6
 END_FUNCTION
