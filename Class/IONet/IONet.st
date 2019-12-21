@@ -32,7 +32,14 @@
 		<Server Name="Error4" GUID="{82B8BD54-9235-480C-943F-A435A56F64AC}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Error5" GUID="{B068579D-A7E3-4A39-8FB0-646E552A1AAD}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Error6" GUID="{5E3B7566-81DD-411E-804E-C306BEFC9B55}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Integrator1" GUID="{E5BC69BC-EB2B-4F7A-B1C3-4B75FC969422}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Integrator2" GUID="{2C9087DB-FC78-42BC-AB95-CCFA2061FF88}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Integrator3" GUID="{A3F5BE80-920D-4095-980B-E1205057F3E2}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Integrator4" GUID="{3594D305-0C92-4708-960C-700E1D3197D8}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Integrator5" GUID="{A95AC8AD-2532-47D2-8CC3-717B82F0D9B5}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="Integrator6" GUID="{3BC48DC0-C90E-4A88-B0BD-4BB031BEE706}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Kd" GUID="{1E92B67D-0951-4DDF-BEE8-FD175E583416}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
+		<Server Name="Ki" GUID="{F829A796-AF7B-48C5-B12F-0689EBDFED42}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Kp" GUID="{FF910E42-75DA-4A0F-8CEC-8625D31CEC11}" Visualized="false" Initialize="true" DefValue="5" WriteProtected="false" Retentive="File"/>
 		<Server Name="Mode" GUID="{51A31849-5FD4-4170-916B-0FF2D1727F49}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="ModeCounter" GUID="{3459DFA1-391E-4A69-8302-8D518A9BF8B0}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
@@ -83,6 +90,7 @@ IONet : CLASS
 	Direction3 	: SvrCh_DINT;
 	Kp 	: SvrCh_DINT;
 	Kd 	: SvrCh_DINT;
+	Ki 	: SvrCh_DINT;
 	Mode 	: SvrCh_DINT;
 	ModeCounter 	: SvrCh_DINT;
 	ModeDuration 	: SvrCh_DINT;
@@ -100,6 +108,12 @@ IONet : CLASS
 	Error4 	: SvrCh_DINT;
 	Error5 	: SvrCh_DINT;
 	Error6 	: SvrCh_DINT;
+	Integrator1 	: SvrCh_DINT;
+	Integrator2 	: SvrCh_DINT;
+	Integrator3 	: SvrCh_DINT;
+	Integrator4 	: SvrCh_DINT;
+	Integrator5 	: SvrCh_DINT;
+	Integrator6 	: SvrCh_DINT;
   //Clients:
 	StartButton 	: CltCh_DINT;
 	StartButtonLamp 	: CltCh_DINT;
@@ -163,6 +177,10 @@ IONet : CLASS
 	FUNCTION ResetPriorErrors;
 	
 	FUNCTION SetPriorErrors;
+	
+	FUNCTION ResetIntegrators;
+	
+	FUNCTION UpdateIntegrators;
   //Tables:
 	FUNCTION @STD
 		VAR_OUTPUT
@@ -178,7 +196,7 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-26$UINT, 24$UINT, 0$UINT, 
+33$UINT, 24$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
@@ -191,6 +209,7 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.Direction3.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(259333003), "Direction3", 
 (::IONet.Kp.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(960484805), "Kp", 
 (::IONet.Kd.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(602210744), "Kd", 
+(::IONet.Ki.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1565818117), "Ki", 
 (::IONet.Mode.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2707401247), "Mode", 
 (::IONet.ModeCounter.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2564985527), "ModeCounter", 
 (::IONet.ModeDuration.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3065233199), "ModeDuration", 
@@ -208,6 +227,12 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.Error4.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(528441440), "Error4", 
 (::IONet.Error5.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1752715510), "Error5", 
 (::IONet.Error6.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4050714956), "Error6", 
+(::IONet.Integrator1.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1269924720), "Integrator1", 
+(::IONet.Integrator2.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3535327946), "Integrator2", 
+(::IONet.Integrator3.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2780815964), "Integrator3", 
+(::IONet.Integrator4.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1004238847), "Integrator4", 
+(::IONet.Integrator5.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1289504617), "Integrator5", 
+(::IONet.Integrator6.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3587512019), "Integrator6", 
 //Clients:
 (::IONet.StartButton.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1214826680), "StartButton", 
 (::IONet.StartButtonLamp.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1027290706), "StartButtonLamp", 
@@ -316,6 +341,13 @@ FUNCTION IONet::@STD
 	END_IF;
 	Kd.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
 	IF Kd.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Ki.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Ki.pMeth THEN
 		ret_code	:= C_OK;
 	ELSE
 		ret_code	:= C_OUTOF_NEAR;
@@ -440,6 +472,48 @@ FUNCTION IONet::@STD
 		ret_code	:= C_OUTOF_NEAR;
 		RETURN;
 	END_IF;
+	Integrator1.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Integrator1.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Integrator2.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Integrator2.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Integrator3.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Integrator3.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Integrator4.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Integrator4.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Integrator5.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Integrator5.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
+	Integrator6.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF Integrator6.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
 
 END_FUNCTION
 
@@ -449,6 +523,7 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
   if _FirstScan then
     Kp := 5;
     Kd := 0;
+    Ki := 0;
     Direction1 := 0;
     Direction2 := 1;
     Direction3 := 0;
@@ -468,6 +543,7 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     // Mode 3: simultaneous roll-pitch (cylinder 1&6 use direction1 and counter1, cylinder 2&3 use direction2 and counter2, others use direction3 and counter3)
     // Mode 4: planar x-y direction TODO
     ResetPriorErrors();   // Reset prior errors for derivative control action
+    ResetIntegrators();   // Reset integrators for integral control action
   end_if;
 
 END_FUNCTION
@@ -508,6 +584,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     ModeCounter := 0;       // Set counter back to 0
     InitializeCounters();   // Re-initialize counters
     ResetPriorErrors();     // Reset prior errors for derivative control action
+    ResetIntegrators();     // Reset integrators for integral control action
     // Turn everything off
     ResetEStop := 0;
     SystemOKLamp := 0;
@@ -523,6 +600,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
       // Stop state ON and go to state IDLE
       System_state := 2;
       ResetPriorErrors();
+      ResetIntegrators();
     end_if;
     // Otherwise this does nothing
   elsif StartButton = 1 then
@@ -558,8 +636,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O4 := -4000;
     O5 := -4000;
     O6 := -4000;
-    
-  
+
   // State ON: perform movements according to the current Mode
   elsif System_state = 1 then
     // Set the mode
@@ -573,13 +650,15 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     Error4 := CylRef(cyl:=4)-I4;
     Error5 := CylRef(cyl:=5)-I5;
     Error6 := CylRef(cyl:=6)-I6;
+    // Update controller integrators
+    UpdateIntegrators();
     // Apply controllers
-    O1 := Error1*Kp + (Error1-Prior_error1)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O2 := Error2*Kp + (Error2-Prior_error2)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O3 := Error3*Kp + (Error3-Prior_error3)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O4 := Error4*Kp + (Error4-Prior_error4)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O5 := Error5*Kp + (Error5-Prior_error5)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O6 := Error6*Kp + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O1 := Error1*Kp + Integrator1*Ki + (Error1-Prior_error1)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O2 := Error2*Kp + Integrator2*Ki + (Error2-Prior_error2)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O3 := Error3*Kp + Integrator3*Ki + (Error3-Prior_error3)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O4 := Error4*Kp + Integrator4*Ki + (Error4-Prior_error4)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O5 := Error5*Kp + Integrator5*Ki + (Error5-Prior_error5)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O6 := Error6*Kp + Integrator6*Ki + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
     // Set prior errors for next iteration
     SetPriorErrors();
     
@@ -774,20 +853,40 @@ END_FUNCTION
 
 
 FUNCTION IONet::ResetPriorErrors
-  Prior_error1 := 0;    // Used for derivative control action on cylinder 1
-  Prior_error2 := 0;    // Used for derivative control action on cylinder 2
-  Prior_error3 := 0;    // Used for derivative control action on cylinder 3
-  Prior_error4 := 0;    // Used for derivative control action on cylinder 4
-  Prior_error5 := 0;    // Used for derivative control action on cylinder 5
-  Prior_error6 := 0;    // Used for derivative control action on cylinder 6
+  Prior_error1 := 0;        // Used for derivative control action on cylinder 1
+  Prior_error2 := 0;        // Used for derivative control action on cylinder 2
+  Prior_error3 := 0;        // Used for derivative control action on cylinder 3
+  Prior_error4 := 0;        // Used for derivative control action on cylinder 4
+  Prior_error5 := 0;        // Used for derivative control action on cylinder 5
+  Prior_error6 := 0;        // Used for derivative control action on cylinder 6
 END_FUNCTION
 
 
 FUNCTION IONet::SetPriorErrors
-  Prior_error1 := Error1;    // Used for derivative control action on cylinder 1
-  Prior_error2 := Error2;    // Used for derivative control action on cylinder 2
-  Prior_error3 := Error3;    // Used for derivative control action on cylinder 3
-  Prior_error4 := Error4;    // Used for derivative control action on cylinder 4
-  Prior_error5 := Error5;    // Used for derivative control action on cylinder 5
-  Prior_error6 := Error6;    // Used for derivative control action on cylinder 6
+  Prior_error1 := Error1;   // Used for derivative control action on cylinder 1
+  Prior_error2 := Error2;   // Used for derivative control action on cylinder 2
+  Prior_error3 := Error3;   // Used for derivative control action on cylinder 3
+  Prior_error4 := Error4;   // Used for derivative control action on cylinder 4
+  Prior_error5 := Error5;   // Used for derivative control action on cylinder 5
+  Prior_error6 := Error6;   // Used for derivative control action on cylinder 6
+END_FUNCTION
+
+
+FUNCTION IONet::ResetIntegrators
+  Integrator1 := 0;         // Used for integral control action on cylinder 1
+  Integrator2 := 0;         // Used for integral control action on cylinder 2
+  Integrator3 := 0;         // Used for integral control action on cylinder 3
+  Integrator4 := 0;         // Used for integral control action on cylinder 4
+  Integrator5 := 0;         // Used for integral control action on cylinder 5
+  Integrator6 := 0;         // Used for integral control action on cylinder 6
+END_FUNCTION
+
+
+FUNCTION IONet::UpdateIntegrators
+  Integrator1 += (Error1/100); // Note: divided by 100 because cycle time is 10ms
+  Integrator2 += (Error2/100); // Note: divided by 100 because cycle time is 10ms
+  Integrator3 += (Error3/100); // Note: divided by 100 because cycle time is 10ms
+  Integrator4 += (Error4/100); // Note: divided by 100 because cycle time is 10ms
+  Integrator5 += (Error5/100); // Note: divided by 100 because cycle time is 10ms
+  Integrator6 += (Error6/100); // Note: divided by 100 because cycle time is 10ms
 END_FUNCTION
