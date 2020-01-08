@@ -26,6 +26,7 @@
 		<Server Name="Direction1" GUID="{85ABB4C2-B932-4D28-BF9D-A6DBA894C0FE}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
 		<Server Name="Direction2" GUID="{64B34C4B-EFE9-4658-AAFB-AF843FB3930F}" Visualized="false" Initialize="true" DefValue="1" WriteProtected="false" Retentive="File"/>
 		<Server Name="Direction3" GUID="{DFA2BB11-7549-4EB0-BB32-6C26AF714199}" Visualized="false" Initialize="true" DefValue="0" WriteProtected="false" Retentive="File"/>
+		<Server Name="DropDownSpeed" GUID="{F6832801-0D97-493D-A1B4-BCF1D0DD41CD}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Error1" GUID="{36657BA5-5B16-402F-BF1E-150655E8F56C}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Error2" GUID="{4CED374D-21B4-47A4-BD7F-B3B6021D92DA}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Error3" GUID="{4A98B4ED-D970-4386-BB73-69D2E87FDFD9}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
@@ -96,6 +97,7 @@ IONet : CLASS
 	ModeDuration 	: SvrCh_DINT;
 	System_state 	: SvrCh_DINT;
 	Speed 	: SvrCh_DINT;
+	DropDownSpeed 	: SvrCh_DINT;
 	Prior_error1 	: SvrCh_DINT;
 	Prior_error2 	: SvrCh_DINT;
 	Prior_error3 	: SvrCh_DINT;
@@ -166,6 +168,8 @@ IONet : CLASS
 	
 	FUNCTION UpdateCounters;
 	
+	FUNCTION DecreaseCounters;
+	
 	FUNCTION CylRef
 		VAR_INPUT
 			cyl 	: DINT;
@@ -196,7 +200,7 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-33$UINT, 24$UINT, 0$UINT, 
+34$UINT, 24$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
@@ -215,6 +219,7 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.ModeDuration.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3065233199), "ModeDuration", 
 (::IONet.System_state.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1707214151), "System_state", 
 (::IONet.Speed.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4168236102), "Speed", 
+(::IONet.DropDownSpeed.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3222792057), "DropDownSpeed", 
 (::IONet.Prior_error1.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(414269587), "Prior_error1", 
 (::IONet.Prior_error2.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2176323881), "Prior_error2", 
 (::IONet.Prior_error3.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(4139721151), "Prior_error3", 
@@ -388,6 +393,13 @@ FUNCTION IONet::@STD
 		ret_code	:= C_OUTOF_NEAR;
 		RETURN;
 	END_IF;
+	DropDownSpeed.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF DropDownSpeed.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
 	Prior_error1.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
 	IF Prior_error1.pMeth THEN
 		ret_code	:= C_OK;
@@ -531,6 +543,7 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     Counter2 := 0;
     Counter3 := 0;
     Speed := 5;           // Number of seconds for a move is 10000/100/Speed (e.g. Speed=10 takes 10 seconds for a move)
+    DropDownSpeed := 10;  // Speed to drop down with when stop button is pressed
     System_state := 0;    // System state: 0 = SAFETY, 1 = ON, 2 = IDLE
     // SAFETY: a safety reset is required to go to System_state IDLE
     // ON: system is doing a sequence of movements
@@ -599,11 +612,6 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     if System_state = 1 then
       // Stop state ON and go to state IDLE
       System_state := 2;
-      ResetPriorErrors();
-      ResetIntegrators();
-      InitializeCounters();
-      Mode := 1;
-      ModeCounter := 0;
     end_if;
     // Otherwise this does nothing
   elsif StartButton = 1 then
@@ -611,6 +619,11 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     if System_state = 2 then
       // Stop state IDLE and go to state ON
       System_state := 1;
+      ResetPriorErrors();
+      ResetIntegrators();
+      InitializeCounters();
+      Mode := 1;
+      ModeCounter := 0;
     end_if;
     // Otherwise this does nothing
   end_if;
@@ -631,21 +644,27 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   end_if;  
     
   // SYSTEM BEHAVIOR
-  // State IDLE: slowly move downwards
-  if System_state = 2 then
-    O1 := -3000;
-    O2 := -3000;
-    O3 := -3000;
-    O4 := -3000;
-    O5 := -3000;
-    O6 := -3000;
+  // State SAFETY: Do nothing (since we cannot control the cylinders anyway)
+  if System_state = 0 then
+    O1 := 0;
+    O2 := 0;
+    O3 := 0;
+    O4 := 0;
+    O5 := 0;
+    O6 := 0;
+  else
+    // State IDLE: slowly move downwards
+    if System_state = 2 then
+      DecreaseCounters();
 
-  // State ON: perform movements according to the current Mode
-  elsif System_state = 1 then
-    // Set the mode
-    SetMode();
-    // Update the counters
-    UpdateCounters();
+    // State ON: perform movements according to the current Mode
+    elsif System_state = 1 then
+      // Set the mode
+      SetMode();
+      // Update the counters
+      UpdateCounters();
+    end_if;
+
     // Calculate errors
     Error1 := CylRef(cyl:=1)-I1;
     Error2 := CylRef(cyl:=2)-I2;
@@ -664,15 +683,6 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O6 := -4000; //Error6*Kp + Integrator6*Ki + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
     // Set prior errors for next iteration
     SetPriorErrors();
-    
-  // State SAFETY: Do nothing (since we cannot control the cylinders anyway)
-  else
-    O1 := 0;
-    O2 := 0;
-    O3 := 0;
-    O4 := 0;
-    O5 := 0;
-    O6 := 0;
   end_if;
 
   // Limit the outputs to their maximum range
@@ -815,6 +825,23 @@ FUNCTION IONet::UpdateCounters
   end_if;
 END_FUNCTION
 
+
+FUNCTION IONet::DecreaseCounters
+  Counter1 -= DropDownSpeed;
+  if Counter1 < 0 then
+    Counter1 := 0;
+  end_if;
+  Counter2 -= DropDownSpeed;
+  if Counter2 < 0 then
+    Counter2 := 0;
+  end_if;
+  Counter3 -= DropDownSpeed;
+  if Counter3 < 0 then
+    Counter3 := 0;
+  end_if;
+END_FUNCTION
+
+
 // Get the reference for a certain cylinder
 FUNCTION IONet::CylRef
 	VAR_INPUT
@@ -893,3 +920,4 @@ FUNCTION IONet::UpdateIntegrators
   Integrator5 += (Error5/100); // Note: divided by 100 because cycle time is 10ms
   Integrator6 += (Error6/100); // Note: divided by 100 because cycle time is 10ms
 END_FUNCTION
+

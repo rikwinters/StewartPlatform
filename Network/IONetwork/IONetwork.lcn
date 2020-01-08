@@ -17,6 +17,7 @@
 				<Server Name="Direction1"/>
 				<Server Name="Direction2"/>
 				<Server Name="Direction3"/>
+				<Server Name="DropDownSpeed"/>
 				<Server Name="Error1"/>
 				<Server Name="Error2"/>
 				<Server Name="Error3"/>
