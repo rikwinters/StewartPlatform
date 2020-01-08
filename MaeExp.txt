@@ -1,5 +1,5 @@
 [CRC]
-0EE32DE4
+9DA319A1
 [VERSION]
 2.07
 [ENUM]
@@ -100,6 +100,7 @@ t_AM_Errors@AM441 : BINT
 "String","STRING","Data",{81990015-D505-4977-9326-733789F9FEAA},
 [IO_ELEMS]
 "DINT","Enable_circuit",
+"DINT","External_controller",
 "DINT","I1",
 "DINT","I2",
 "DINT","I3",

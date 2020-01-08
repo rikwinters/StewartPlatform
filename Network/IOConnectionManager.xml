@@ -13,6 +13,12 @@
 			<IOConnection ObjSrv="DM1611" Server="Output1" ObjClt="IONet1" Client="EnableCircuit" IOI="Output" Type="Digital" SortIndex="1" KeyName="000005"/>
 		</IOConnections>
 	</Entry>
+	<Entry Name="External_controller" Objectsize="284" TempObj="true">
+		<!-- List of Connections -->
+		<IOConnections>
+			<IOConnection ObjSrv="DM1611" Server="Input6" ObjClt="IONet1" Client="ExternalController" IOI="Input" Type="Digital" SortIndex="25" KeyName="000025"/>
+		</IOConnections>
+	</Entry>
 	<Entry Name="I1" Objectsize="284" TempObj="true">
 		<!-- List of Connections -->
 		<IOConnections>

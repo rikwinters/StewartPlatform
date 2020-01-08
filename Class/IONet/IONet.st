@@ -54,6 +54,7 @@
 		<Server Name="Speed" GUID="{3A558FC9-2A03-4C35-AA8E-EC22ADE352F4}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="System_state" GUID="{98E84BF1-461A-4B9A-BBDF-DE3A70CB959C}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Client Name="EnableCircuit" Required="true" Internal="false"/>
+		<Client Name="ExternalController" Required="true" Internal="false"/>
 		<Client Name="I1" Required="true" Internal="false"/>
 		<Client Name="I2" Required="true" Internal="false"/>
 		<Client Name="I3" Required="true" Internal="false"/>
@@ -129,6 +130,7 @@ IONet : CLASS
 	StartPumps 	: CltCh_DINT;
 	Pressurize 	: CltCh_DINT;
 	ResetEStop 	: CltCh_DINT;
+	ExternalController 	: CltCh_DINT;
 	O1 	: CltCh_DINT;
 	O2 	: CltCh_DINT;
 	O3 	: CltCh_DINT;
@@ -200,7 +202,7 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-34$UINT, 24$UINT, 0$UINT, 
+34$UINT, 25$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
@@ -251,6 +253,7 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.StartPumps.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(2888713881), "StartPumps", 
 (::IONet.Pressurize.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1463743272), "Pressurize", 
 (::IONet.ResetEStop.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(2927587190), "ResetEStop", 
+(::IONet.ExternalController.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(570613127), "ExternalController", 
 (::IONet.O1.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1743143183), "O1", 
 (::IONet.O2.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(4277080245), "O2", 
 (::IONet.O3.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(2313691171), "O3", 
@@ -544,10 +547,11 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     Counter3 := 0;
     Speed := 5;           // Number of seconds for a move is 10000/100/Speed (e.g. Speed=10 takes 10 seconds for a move)
     DropDownSpeed := 10;  // Speed to drop down with when stop button is pressed
-    System_state := 0;    // System state: 0 = SAFETY, 1 = ON, 2 = IDLE
+    System_state := 0;    // System state: 0 = SAFETY, 1 = ON, 2 = IDLE, 3 = PAUSED
     // SAFETY: a safety reset is required to go to System_state IDLE
     // ON: system is doing a sequence of movements
-    // IDLE: System slowly moves to lowest position and stays there (controlled)
+    // IDLE: System slowly moves to lowest position and stays there (controlled by buttons)
+    // PAUSED: System slowly moves to lowest position and stays there (controlled by external controller)
     Mode := 1;            // Mode indicates which movement to perform
     ModeDuration := 4000; // Duration of one mode (in samples)
     ModeCounter := 0;     // Counts when to shift to the next mode
@@ -574,6 +578,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
 	StopButton := StopButton.Read();
 	ResetButton := ResetButton.Read();
   SystemEnable := SystemEnable.Read(); // Safety circuit input
+  ExternalController := ExternalController.Read(); // External controller 
   I1 := I1.Read();
   I2 := I2.Read();
   I3 := I3.Read();
@@ -608,12 +613,18 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   
   // Handle inputs of stop and start button
   if StopButton = 1 then
-    // StopButton (red) lets the system go to state 2 (IDLE), transition only possible from state 1 (ON)
-    if System_state = 1 then
-      // Stop state ON and go to state IDLE
+    // StopButton (red) lets the system go to state 2 (IDLE), transition only possible from state 1 (ON) or state 3 (PAUSED)
+    if System_state = 1 | System_state = 3 then
+      // Stop state ON/PAUSED and go to state IDLE
       System_state := 2;
     end_if;
     // Otherwise this does nothing
+  elsif ExternalController = 0 then
+    // External controller low lets the system go to state 3 (PAUSED), transition only possible from state 1 (ON)
+    if System_state = 1 then
+      // Stop state ON and go to state PAUSED
+      System_state := 3;
+    end_if;
   elsif StartButton = 1 then
     // StartButton (green) lets the system go to state 1 (ON), transition only possible from state 2 (IDLE)
     if System_state = 2 then
@@ -626,6 +637,17 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
       ModeCounter := 0;
     end_if;
     // Otherwise this does nothing
+  elsif ExternalController = 1 then
+    // External controller high means that the system should move (state 2), transition only possible from state 3 (PAUSED)
+    if System_state = 3 then
+      // Stop state PAUSED and go to state ON
+      System_state := 1;
+      ResetPriorErrors();
+      ResetIntegrators();
+      InitializeCounters();
+      Mode := 1;
+      ModeCounter := 0;
+    end_if;
   end_if;
   
   // Provide feedback on the current system state
@@ -641,6 +663,10 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     StartButtonLamp := 0;
     StopButtonLamp := 1;
     ResetButtonLamp := 0;
+  elsif System_state = 3 then
+    StartButtonLamp := 0;
+    StopButtonLamp := 0;
+    ResetButtonLamp := 0;
   end_if;  
     
   // SYSTEM BEHAVIOR
@@ -653,8 +679,8 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O5 := 0;
     O6 := 0;
   else
-    // State IDLE: slowly move downwards
-    if System_state = 2 then
+    // State IDLE or PAUSED: slowly move downwards
+    if System_state = 2 | System_state = 3 then
       DecreaseCounters();
 
     // State ON: perform movements according to the current Mode

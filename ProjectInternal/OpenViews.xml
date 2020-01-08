@@ -2,8 +2,8 @@
 <OpenViews>
 	<View Key="Graphical Hardware Editor" Type="17"/>
 	<View Key="Hardware Editor" Type="12"/>
-	<View Key="IONet" Type="2" LineNr="17"/>
+	<View Key="IONet" Type="2" LineNr="115"/>
 	<View Key="IONetwork" Type="0"/>
-	<View Key="IONet" Type="2" LineNr="17"/>
+	<View Key="IONet" Type="2" LineNr="115"/>
 	<Setting Variable="OutputDebugger" Value="8"/>
 </OpenViews>
