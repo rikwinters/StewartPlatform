@@ -527,16 +527,16 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     Direction1 := 0;
     Direction2 := 1;
     Direction3 := 0;
-    Counter1 := 2000;
-    Counter2 := 6000;
-    Counter3 := 6000;
-    Speed := 10;          // Number of seconds for a move is 8000/100/Speed (e.g. Speed=10 takes 8 seconds for a move)
+    Counter1 := 0;
+    Counter2 := 0;
+    Counter3 := 0;
+    Speed := 5;           // Number of seconds for a move is 10000/100/Speed (e.g. Speed=10 takes 10 seconds for a move)
     System_state := 0;    // System state: 0 = SAFETY, 1 = ON, 2 = IDLE
     // SAFETY: a safety reset is required to go to System_state IDLE
     // ON: system is doing a sequence of movements
     // IDLE: System slowly moves to lowest position and stays there (controlled)
-    Mode := 0;            // Mode indicates which movement to perform
-    ModeDuration := 1000; // Duration of one mode (in samples)
+    Mode := 1;            // Mode indicates which movement to perform
+    ModeDuration := 4000; // Duration of one mode (in samples)
     ModeCounter := 0;     // Counts when to shift to the next mode
     // Mode 1: up-down Z-direction (cylinder 1-6 use direction1 and counter1)
     // Mode 2: rotate yaw (cylinder 1,3,5 use direction1 and counter1, others use direction2 and counter2)
@@ -580,7 +580,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   else
     // Set state variables
     System_state := 0;      // System state SAFETY
-    Mode := 0;              // Mode starts at 0 again
+    Mode := 1;              // Mode starts at 1 again
     ModeCounter := 0;       // Set counter back to 0
     InitializeCounters();   // Re-initialize counters
     ResetPriorErrors();     // Reset prior errors for derivative control action
@@ -601,6 +601,9 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
       System_state := 2;
       ResetPriorErrors();
       ResetIntegrators();
+      InitializeCounters();
+      Mode := 1;
+      ModeCounter := 0;
     end_if;
     // Otherwise this does nothing
   elsif StartButton = 1 then
@@ -630,12 +633,12 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
   // SYSTEM BEHAVIOR
   // State IDLE: slowly move downwards
   if System_state = 2 then
-    O1 := -4000;
-    O2 := -4000;
-    O3 := -4000;
-    O4 := -4000;
-    O5 := -4000;
-    O6 := -4000;
+    O1 := -3000;
+    O2 := -3000;
+    O3 := -3000;
+    O4 := -3000;
+    O5 := -3000;
+    O6 := -3000;
 
   // State ON: perform movements according to the current Mode
   elsif System_state = 1 then
@@ -657,8 +660,8 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O2 := Error2*Kp + Integrator2*Ki + (Error2-Prior_error2)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
     O3 := Error3*Kp + Integrator3*Ki + (Error3-Prior_error3)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
     O4 := Error4*Kp + Integrator4*Ki + (Error4-Prior_error4)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O5 := Error5*Kp + Integrator5*Ki + (Error5-Prior_error5)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O6 := Error6*Kp + Integrator6*Ki + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O5 := -4000; //Error5*Kp + Integrator5*Ki + (Error5-Prior_error5)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O6 := -4000; //Error6*Kp + Integrator6*Ki + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
     // Set prior errors for next iteration
     SetPriorErrors();
     
@@ -745,25 +748,25 @@ END_FUNCTION
 
 FUNCTION IONet::InitializeCounters
   if Mode = 1 then
-    Counter1 := 4000;
+    Counter1 := 0;
     Direction1 := 0;
     Counter2 := 0;
     Direction2 := 0;
     Counter3 := 0;
     Direction3 := 0;
   elsif Mode = 2 then 
-    Counter1 := 4000;
+    Counter1 := 0;
     Direction1 := 0;
-    Counter2 := 4000;
+    Counter2 := 0;
     Direction2 := 1;
     Counter3 := 0;
     Direction3 := 0;
   elsif Mode = 3 then 
-    Counter1 := 2000;
+    Counter1 := 0;
     Direction1 := 0;
-    Counter2 := 6000;
+    Counter2 := 0;
     Direction2 := 0;
-    Counter3 := 6000;
+    Counter3 := 0;
     Direction3 := 1;
   else
     Counter1 := 0;
@@ -779,34 +782,34 @@ END_FUNCTION
 FUNCTION IONet::UpdateCounters
   if Direction1 = 0 then
     Counter1 += Speed;
-    if Counter1 >= 8000 then
+    if Counter1 >= 10000 then
       Direction1 := 1;
     end_if;
   else
     Counter1 -= Speed;
-    if Counter1 <= 2000 then
+    if Counter1 <= 0 then
       Direction1 := 0;
     end_if;
   end_if;
   if Direction2 = 0 then
     Counter2 += Speed;
-    if Counter2 >= 8000 then
+    if Counter2 >= 10000 then
       Direction2 := 1;
     end_if;
   else
     Counter2 -= Speed;
-    if Counter2 <= 2000 then
+    if Counter2 <= 0 then
       Direction2 := 0;
     end_if;
   end_if;
   if Direction3 = 0 then
     Counter3 += Speed;
-    if Counter3 >= 8000 then
+    if Counter3 >= 10000 then
       Direction3 := 1;
     end_if;
   else
     Counter3 -= Speed;
-    if Counter3 <= 2000 then
+    if Counter3 <= 0 then
       Direction3 := 0;
     end_if;
   end_if;
@@ -825,24 +828,24 @@ FUNCTION IONet::CylRef
     // All cylinders follow reference of Counter1
     ref := Counter1;
   elsif mode = 2 then
-    // Cylinders 1, 3 and 5 follow reference of Counter1, others follow Counter2
+    // Cylinders 1 and 2 follow reference of Counter1, others are 0
     case cyl of
       1: ref := Counter1;
-      2: ref := Counter2;
-      3: ref := Counter1;
-      4: ref := Counter2;
-      5: ref := Counter1;
-      6: ref := Counter2;
+      2: ref := Counter1;
+      3: ref := 0;
+      4: ref := 0;
+      5: ref := 0;
+      6: ref := 0;
     end_case;
   elsif mode = 3 then
-    // Cylinders 1&6 follow reference of Counter1, 2&3 follow Counter2, 4&5 follow Counter3
+    // Cylinders 3 and 4 follow reference of Counter1, others are 0
     case cyl of
-      1: ref := Counter1;
-      2: ref := Counter2;
-      3: ref := Counter2;
-      4: ref := Counter3;
-      5: ref := Counter3;
-      6: ref := Counter1;
+      1: ref := 0;
+      2: ref := 0;
+      3: ref := Counter1;
+      4: ref := Counter1;
+      5: ref := 0;
+      6: ref := 0;
     end_case;
   else
     // All cylinders follow reference of Counter1

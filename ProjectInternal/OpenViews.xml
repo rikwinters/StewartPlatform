@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <OpenViews>
+	<View Key="Graphical Hardware Editor" Type="17"/>
+	<View Key="Hardware Editor" Type="12"/>
+	<View Key="IONet" Type="2" LineNr="62"/>
+	<View Key="IONetwork" Type="0"/>
+	<View Key="IONet" Type="2" LineNr="62"/>
 	<Setting Variable="OutputDebugger" Value="8"/>
 </OpenViews>
