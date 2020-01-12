@@ -537,8 +537,8 @@ END_FUNCTION
 FUNCTION VIRTUAL GLOBAL IONet::Init
   if _FirstScan then
     Kp := 5;
-    Kd := 0;
-    Ki := 0;
+    Kd := 20;
+    Ki := 1;
     Direction1 := 0;
     Direction2 := 1;
     Direction3 := 0;
@@ -553,7 +553,7 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     // IDLE: System slowly moves to lowest position and stays there (controlled by buttons)
     // PAUSED: System slowly moves to lowest position and stays there (controlled by external controller)
     Mode := 1;            // Mode indicates which movement to perform
-    ModeDuration := 4000; // Duration of one mode (in samples)
+    ModeDuration := 2000; // Duration of one mode (in samples)
     ModeCounter := 0;     // Counts when to shift to the next mode
     // Mode 1: up-down Z-direction (cylinder 1-6 use direction1 and counter1)
     // Mode 2: rotate yaw (cylinder 1,3,5 use direction1 and counter1, others use direction2 and counter2)
@@ -701,10 +701,10 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     // Update controller integrators
     UpdateIntegrators();
     // Apply controllers
-    O1 := Error1*Kp + Integrator1*Ki + (Error1-Prior_error1)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O2 := Error2*Kp + Integrator2*Ki + (Error2-Prior_error2)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O3 := Error3*Kp + Integrator3*Ki + (Error3-Prior_error3)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O4 := Error4*Kp + Integrator4*Ki + (Error4-Prior_error4)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O1 := Error1*Kp + Integrator1*Ki + (Error1-Prior_error1)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O2 := Error2*Kp + Integrator2*Ki + (Error2-Prior_error2)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O3 := Error3*Kp + Integrator3*Ki + (Error3-Prior_error3)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O4 := Error4*Kp + Integrator4*Ki + (Error4-Prior_error4)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
     O5 := -4000; //Error5*Kp + Integrator5*Ki + (Error5-Prior_error5)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
     O6 := -4000; //Error6*Kp + Integrator6*Ki + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
     // Set prior errors for next iteration
@@ -818,7 +818,7 @@ END_FUNCTION
 FUNCTION IONet::UpdateCounters
   if Direction1 = 0 then
     Counter1 += Speed;
-    if Counter1 >= 10000 then
+    if Counter1 >= 5000 then
       Direction1 := 1;
     end_if;
   else
@@ -829,7 +829,7 @@ FUNCTION IONet::UpdateCounters
   end_if;
   if Direction2 = 0 then
     Counter2 += Speed;
-    if Counter2 >= 10000 then
+    if Counter2 >= 5000 then
       Direction2 := 1;
     end_if;
   else
@@ -840,7 +840,7 @@ FUNCTION IONet::UpdateCounters
   end_if;
   if Direction3 = 0 then
     Counter3 += Speed;
-    if Counter3 >= 10000 then
+    if Counter3 >= 5000 then
       Direction3 := 1;
     end_if;
   else
