@@ -701,12 +701,12 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     // Update controller integrators
     UpdateIntegrators();
     // Apply controllers
-    O1 := Error1*Kp + Integrator1*Ki + (Error1-Prior_error1)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
-    O2 := Error2*Kp + Integrator2*Ki + (Error2-Prior_error2)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
-    O3 := Error3*Kp + Integrator3*Ki + (Error3-Prior_error3)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
-    O4 := Error4*Kp + Integrator4*Ki + (Error4-Prior_error4)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
-    O5 := -4000; //Error5*Kp + Integrator5*Ki + (Error5-Prior_error5)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
-    O6 := -4000; //Error6*Kp + Integrator6*Ki + (Error6-Prior_error6)*100*Kd; // Note: multiplied by 100 because cycle time is 10ms
+    O1 := 0; //Error1*Kp + Integrator1*Ki + (Error1-Prior_error1)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O2 := 0; //Error2*Kp + Integrator2*Ki + (Error2-Prior_error2)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O3 := 0; //Error3*Kp + Integrator3*Ki + (Error3-Prior_error3)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O4 := 0; //Error4*Kp + Integrator4*Ki + (Error4-Prior_error4)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O5 := -4000; //Error5*Kp + Integrator5*Ki + (Error5-Prior_error5)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
+    O6 := -4000; //Error6*Kp + Integrator6*Ki + (Error6-Prior_error6)*1*Kd; // Note: multiplied by 1 instead of 100 to allow lower damping
     // Set prior errors for next iteration
     SetPriorErrors();
   end_if;

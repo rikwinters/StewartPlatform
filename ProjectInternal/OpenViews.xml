@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <OpenViews>
-	<View Key=".\StewartPlatform.lcp" Type="4" LineNr="1"/>
-	<View Key="Graphical Hardware Editor" Type="17"/>
-	<View Key="Hardware Editor" Type="12"/>
-	<View Key="IONet" Type="2" LineNr="21"/>
-	<View Key="IONetwork" Type="0"/>
-	<View Key="IONet" Type="2" LineNr="21"/>
 	<Setting Variable="OutputDebugger" Value="8"/>
 </OpenViews>
