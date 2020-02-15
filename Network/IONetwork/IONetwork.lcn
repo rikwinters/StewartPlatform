@@ -14,6 +14,8 @@
 				<Server Name="Counter1"/>
 				<Server Name="Counter2"/>
 				<Server Name="Counter3"/>
+				<Server Name="DefaultSpeed"/>
+				<Server Name="diff"/>
 				<Server Name="Direction1"/>
 				<Server Name="Direction2"/>
 				<Server Name="Direction3"/>
@@ -24,6 +26,8 @@
 				<Server Name="Error4"/>
 				<Server Name="Error5"/>
 				<Server Name="Error6"/>
+				<Server Name="InitCounter1"/>
+				<Server Name="InitialTolerance"/>
 				<Server Name="Integrator1"/>
 				<Server Name="Integrator2"/>
 				<Server Name="Integrator3"/>
@@ -33,9 +37,9 @@
 				<Server Name="Kd"/>
 				<Server Name="Ki"/>
 				<Server Name="Kp"/>
+				<Server Name="LowerLimit"/>
 				<Server Name="Mode"/>
-				<Server Name="ModeCounter"/>
-				<Server Name="ModeDuration"/>
+				<Server Name="Phase"/>
 				<Server Name="Prior_error1"/>
 				<Server Name="Prior_error2"/>
 				<Server Name="Prior_error3"/>
@@ -44,6 +48,7 @@
 				<Server Name="Prior_error6"/>
 				<Server Name="Speed"/>
 				<Server Name="System_state"/>
+				<Server Name="UpperLimit"/>
 				<Client Name="EnableCircuit"/>
 				<Client Name="ExternalController"/>
 				<Client Name="I1"/>
