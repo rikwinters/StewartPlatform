@@ -39,6 +39,8 @@
 				<Server Name="Kp"/>
 				<Server Name="LowerLimit"/>
 				<Server Name="Mode"/>
+				<Server Name="ModeDoneCounter"/>
+				<Server Name="ModeDoneSmoother"/>
 				<Server Name="Phase"/>
 				<Server Name="Prior_error1"/>
 				<Server Name="Prior_error2"/>

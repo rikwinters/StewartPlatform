@@ -48,6 +48,8 @@
 		<Server Name="Kp" GUID="{FF910E42-75DA-4A0F-8CEC-8625D31CEC11}" Visualized="false" Initialize="true" DefValue="5" WriteProtected="false" Retentive="File"/>
 		<Server Name="LowerLimit" GUID="{C42EE324-66F1-488F-8797-248F7A608ADB}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Mode" GUID="{51A31849-5FD4-4170-916B-0FF2D1727F49}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
+		<Server Name="ModeDoneCounter" GUID="{88CC8EDF-C49E-4D02-90F5-7D6F089F0194}" Visualized="false" Initialize="false" WriteProtected="true" Retentive="false"/>
+		<Server Name="ModeDoneSmoother" GUID="{4B2521DA-AA53-4339-95C0-AB33E7D2CFD3}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Phase" GUID="{AFD97D4F-65B9-4DDF-AA07-6B8887E03E6D}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Prior_error1" GUID="{38480575-CF1F-4ED7-A69B-99C3AD20E940}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
 		<Server Name="Prior_error2" GUID="{3D1DB2FB-E40C-4A7A-BA37-C0049840B140}" Visualized="false" Initialize="false" WriteProtected="false" Retentive="File"/>
@@ -127,6 +129,8 @@ IONet : CLASS
 	UpperLimit 	: SvrCh_DINT;
 	diff 	: SvrCh_DINT;
 	InitialTolerance 	: SvrCh_DINT;
+	ModeDoneSmoother 	: SvrCh_DINT;
+	ModeDoneCounter 	: SvrCh_DINT;
   //Clients:
 	StartButton 	: CltCh_DINT;
 	StartButtonLamp 	: CltCh_DINT;
@@ -208,6 +212,14 @@ IONet : CLASS
 	FUNCTION UpdateIntegrators;
 	
 	FUNCTION InitializeMode;
+	
+	FUNCTION AbsoluteValue
+		VAR_INPUT
+			Actual 	: DINT;
+		END_VAR
+		VAR_OUTPUT
+			Absolute 	: DINT;
+		END_VAR;
   //Tables:
 	FUNCTION @STD
 		VAR_OUTPUT
@@ -223,7 +235,7 @@ FUNCTION GLOBAL TAB IONet::@CT_
 0$UINT,
 2#0100000000000010$UINT, //TY_IONET
 0$UINT, 0$UINT, (SIZEOF(::IONet))$UINT, 
-39$UINT, 25$UINT, 0$UINT, 
+41$UINT, 25$UINT, 0$UINT, 
 TO_UDINT(3417967401), "IONet", //Class
 TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 //Servers:
@@ -266,6 +278,8 @@ TO_UDINT(0), 0, 0$UINT, 0$UINT, //Baseclass
 (::IONet.UpperLimit.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(2186721573), "UpperLimit", 
 (::IONet.diff.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(1944431135), "diff", 
 (::IONet.InitialTolerance.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(3854616390), "InitialTolerance", 
+(::IONet.ModeDoneSmoother.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000011000$UINT, TO_UDINT(666719505), "ModeDoneSmoother", 
+(::IONet.ModeDoneCounter.pMeth)$UINT, _CH_SVR$UINT, 2#0000000000000000$UINT, TO_UDINT(1056564492), "ModeDoneCounter", 
 //Clients:
 (::IONet.StartButton.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1214826680), "StartButton", 
 (::IONet.StartButtonLamp.pCh)$UINT, _CH_CLT_DATA$UINT, 2#0000000000000010$UINT, TO_UDINT(1027290706), "StartButtonLamp", 
@@ -590,6 +604,13 @@ FUNCTION IONet::@STD
 		ret_code	:= C_OUTOF_NEAR;
 		RETURN;
 	END_IF;
+	ModeDoneSmoother.pMeth			:= StoreMethod( #M_RD_DIRECT(), #M_WR_DIRECT() );
+	IF ModeDoneSmoother.pMeth THEN
+		ret_code	:= C_OK;
+	ELSE
+		ret_code	:= C_OUTOF_NEAR;
+		RETURN;
+	END_IF;
 
 END_FUNCTION
 
@@ -616,6 +637,8 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     // IDLE: System slowly moves to lowest position and stays there (controlled by buttons)
     // PAUSED: System slowly moves to lowest position and stays there (controlled by external controller)
     Mode := 1;                // Mode indicates which movement to perform
+    ModeDoneSmoother := 50;   // To let the platform stabilize before starting next mode
+    ModeDoneCounter := 0;
     Phase := 1;               // Phase indicates the part of the mode we are in (1 = go to initial, 2 = outbound, 3 = inbound, 4 = done)
     // Mode 1: up-down Z-direction (cylinder 1-6 use direction1 and counter1)
     // Mode 2: rotate yaw (cylinder 1,3,5 use direction1 and counter1, others use direction2 and counter2)
@@ -763,7 +786,7 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     Error6 := CylRef(cyl:=6)-I6;
 
     if Phase = 1 then
-      if abs(Error1) < Speed & abs(Error2) < Speed & abs(Error3) < Speed & abs(Error4) < Speed & abs(Error5) < Speed & abs(Error6) < Speed then
+      if AbsoluteValue(Actual:=Error1) < InitialTolerance & AbsoluteValue(Actual:=Error2) < InitialTolerance & AbsoluteValue(Actual:=Error3) < InitialTolerance & AbsoluteValue(Actual:=Error4) < InitialTolerance & AbsoluteValue(Actual:=Error5) < InitialTolerance & AbsoluteValue(Actual:=Error6) < InitialTolerance then
         // All cylinders are now close enough to their initial positions so we can enter Phase 2
         Phase := 2;
       end_if;
@@ -892,6 +915,7 @@ FUNCTION IONet::InitializeCounters
     Direction3 := 0;
   end_if;
   InitCounter1 := Counter1;
+  ModeDoneCounter := 0;
 END_FUNCTION
 
 
@@ -900,7 +924,14 @@ FUNCTION IONet::UpdateCounters
   if Direction1 = 0 then
     Counter1 += Speed;
     if Phase = 3 & Counter1 >= InitCounter1 then
-      Phase :=4;  // To done phase
+      if ModeDoneCounter >= ModeDoneSmoother then
+        Phase := 4;  // To done phase
+      else
+        // Stabilize first for smooth switch to next mode
+        ModeDoneCounter += 1;
+        Counter1 -= Speed;
+        return;
+      end_if;
     elsif Counter1 >= UpperLimit then
       Direction1 := 1;
       Phase := 3; // To inbound movement phase
@@ -1065,4 +1096,20 @@ FUNCTION IONet::UpdateIntegrators
   Integrator4 += (Error4/100); // Note: divided by 100 because cycle time is 10ms
   Integrator5 += (Error5/100); // Note: divided by 100 because cycle time is 10ms
   Integrator6 += (Error6/100); // Note: divided by 100 because cycle time is 10ms
+END_FUNCTION
+
+
+FUNCTION IONet::AbsoluteValue
+	VAR_INPUT
+		Actual 	: DINT;
+	END_VAR
+	VAR_OUTPUT
+		Absolute 	: DINT;
+	END_VAR
+
+  if Actual >= 0 then
+    Absolute := Actual;
+  else
+    Absolute := -Actual;
+  end_if;
 END_FUNCTION
