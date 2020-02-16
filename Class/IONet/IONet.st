@@ -727,8 +727,8 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
       System_state := 1;
       // ResetPriorErrors();
       // ResetIntegrators();
-      Mode := 1;
-      InitializeMode();
+      // Mode := 1;
+      // InitializeMode();
     end_if;
   end_if;
   
@@ -761,10 +761,9 @@ FUNCTION VIRTUAL GLOBAL IONet::CyWork
     O5 := 0;
     O6 := 0;
   else
-    // State IDLE or PAUSED: slowly move downwards
-    if System_state = 2 | System_state = 3 then
+    // State IDLE: slowly move downwards
+    if System_state = 2 then
       DecreaseCounters();
-
     // State ON: perform movements according to the current Mode
     elsif System_state = 1 then
       // If previous mode is done, update it
@@ -1021,15 +1020,27 @@ FUNCTION IONet::CylRef
   end_if;
 
   if Phase = 1 then
-    // First slowly move to initial position of cylinder
-    case cyl of
-      1: ref := GoToInitial(ref:=ref, actual:=I1);
-      2: ref := GoToInitial(ref:=ref, actual:=I2);
-      3: ref := GoToInitial(ref:=ref, actual:=I3);
-      4: ref := GoToInitial(ref:=ref, actual:=I4);
-      5: ref := GoToInitial(ref:=ref, actual:=I5);
-      6: ref := GoToInitial(ref:=ref, actual:=I6);
-    end_case;
+    if System_state = 3 then
+      // Do nothing
+      case cyl of
+        1: ref := I1;
+        2: ref := I2;
+        3: ref := I3;
+        4: ref := I4;
+        5: ref := I5;
+        6: ref := I6;
+      end_case;
+    else
+      // First slowly move to initial position of cylinder
+      case cyl of
+        1: ref := GoToInitial(ref:=ref, actual:=I1);
+        2: ref := GoToInitial(ref:=ref, actual:=I2);
+        3: ref := GoToInitial(ref:=ref, actual:=I3);
+        4: ref := GoToInitial(ref:=ref, actual:=I4);
+        5: ref := GoToInitial(ref:=ref, actual:=I5);
+        6: ref := GoToInitial(ref:=ref, actual:=I6);
+      end_case;
+    end_if;
   end_if;
 
 END_FUNCTION
