@@ -103,9 +103,6 @@
 	<ObjectFiles>
 		<File Path=".\Loader\Source\Loader.lob" Downloadable="false"/>
 	</ObjectFiles>
-	<LibraryFiles>
-		<File Path=".\Hardware\Hardware.lcp"/>
-	</LibraryFiles>
 	<Options>
 		<Target UseFPU="true" Processor="ARM">
 		</Target>

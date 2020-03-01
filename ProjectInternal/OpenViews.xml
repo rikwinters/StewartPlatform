@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <OpenViews>
 	<View Key="IONetwork" Type="0"/>
-	<View Key="IONet" Type="2" LineNr="426"/>
-	<View Key="IONet" Type="2" LineNr="426"/>
+	<View Key="IONet" Type="2" LineNr="15"/>
+	<View Key="IONet" Type="2" LineNr="15"/>
 	<Setting Variable="OutputDebugger" Value="8"/>
 </OpenViews>

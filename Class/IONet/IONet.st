@@ -628,8 +628,8 @@ FUNCTION VIRTUAL GLOBAL IONet::Init
     Counter1 := LowerLimit;
     Counter2 := LowerLimit;
     Counter3 := LowerLimit;
-    DefaultSpeed := 5;        // Speed with which to increase counters every 10ms
-    InitialTolerance := 200;  // Tolerance to initial mode position below which the mode is started
+    DefaultSpeed := 6;        // Speed with which to increase counters every 10ms
+    InitialTolerance := 300;  // Tolerance to initial mode position below which the mode is started
     DropDownSpeed := 10;      // Speed to drop down with when stop button is pressed
     System_state := 0;        // System state: 0 = SAFETY, 1 = ON, 2 = IDLE, 3 = PAUSED
     // SAFETY: a safety reset is required to go to System_state IDLE
